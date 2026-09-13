@@ -1,0 +1,49 @@
+cmake_minimum_required(VERSION 3.28)
+project(Display-Engine LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(SFML_DIR "C:/SFML/lib/cmake/SFML")
+
+find_package(SFML 3 COMPONENTS Graphics Window System REQUIRED)
+
+add_executable(Display-Engine
+        main.cpp
+
+        //Includes
+        //    Controller
+        //    Core
+        //    Factories
+        //    Input
+        //    Logic
+        //    Rendering
+        //    Resources
+        //    States
+        //    Utils
+        //    Window
+
+        //Src
+        //    Controller
+        //    Core
+        //    Factories
+        //    Input
+        //    Logic
+        //    Rendering
+        //    Resources
+        //    States
+        //    Utils
+        //    Window
+)
+
+target_link_libraries(Display-Engine PRIVATE
+        SFML::Graphics
+        SFML::Window
+        SFML::System
+)
+
+add_custom_command(TARGET Display-Engine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "C:/SFML/bin"
+        "$<TARGET_FILE_DIR:Display-Engine>"
+)
