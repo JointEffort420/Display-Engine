@@ -18,120 +18,121 @@
 #include "Resources/FontManager.h"
 #include "Resources/TextureManager.h"
 
-//----------------------------------------------------------------------------------------------------------------------
-// Polygon
-//----------------------------------------------------------------------------------------------------------------------
+namespace eng {
+    //----------------------------------------------------------------------------------------------------------------------
+    // Polygon
+    //----------------------------------------------------------------------------------------------------------------------
+    struct PolygonViewConfig {
+        std::vector<std::pair<float, float>> relativePoints = {
+            {0.0f, 0.0f},
+            {1.0f, 0.0f},
+            {1.0f, 1.0f},
+            {0.0f, 1.0f}
+        };
 
-struct PolygonViewConfig {
-    std::vector<std::pair<float, float>> relativePoints = {
-        {0.0f, 0.0f},
-        {1.0f, 0.0f},
-        {1.0f, 1.0f},
-        {0.0f, 1.0f}
+        bool fill = true;
+        bool edge = false;
+        float edgeThickness = 2.f;
+
+        sf::Color fillColor = sf::Color::Black;
+        sf::Color edgeColor = sf::Color::White;
     };
 
-    bool fill = true;
-    bool edge = false;
-    float edgeThickness = 2.f;
+    inline const PolygonViewConfig defaultPolygonConfig = {};
 
-    sf::Color fillColor = sf::Color::Black;
-    sf::Color edgeColor = sf::Color::White;
-};
+    //----------------------------------------------------------------------------------------------------------------------
+    // Ellipse
+    //----------------------------------------------------------------------------------------------------------------------
 
-inline const PolygonViewConfig defaultPolygonConfig = {};
+    struct EllipseViewConfig {
+        bool fill = true;
+        bool edge = true;
 
-//----------------------------------------------------------------------------------------------------------------------
-// Ellipse
-//----------------------------------------------------------------------------------------------------------------------
+        sf::Color fillColor = sf::Color::White;
+        sf::Color edgeColor = sf::Color::Black;
 
-struct EllipseViewConfig {
-    bool fill = true;
-    bool edge = true;
+        unsigned int pointCount = 64;
+    };
 
-    sf::Color fillColor = sf::Color::White;
-    sf::Color edgeColor = sf::Color::Black;
+    inline const EllipseViewConfig defaultEllipseConfig = {};
 
-    unsigned int pointCount = 64;
-};
+    //----------------------------------------------------------------------------------------------------------------------
+    // Grid
+    //----------------------------------------------------------------------------------------------------------------------
 
-inline const EllipseViewConfig defaultEllipseConfig = {};
+    struct GridViewConfig {
+        sf::Color aliveColor = sf::Color::Red;
+        sf::Color deadColor = sf::Color::Black;
+        sf::Color gridLineColor = sf::Color::Red;
 
-//----------------------------------------------------------------------------------------------------------------------
-// Grid
-//----------------------------------------------------------------------------------------------------------------------
+        float lineWidth = 1.0f;
+    };
 
-struct GridViewConfig {
-    sf::Color aliveColor = sf::Color::Red;
-    sf::Color deadColor = sf::Color::Black;
-    sf::Color gridLineColor = sf::Color::Red;
+    inline const GridViewConfig defaultGridViewConfig = {};
 
-    float lineWidth = 1.0f;
-};
+    //----------------------------------------------------------------------------------------------------------------------
+    // Text
+    //----------------------------------------------------------------------------------------------------------------------
 
-inline const GridViewConfig defaultGridViewConfig = {};
+    struct TextViewConfig {
+        const sf::Font* font = FontManager::getDefaultFont();
 
-//----------------------------------------------------------------------------------------------------------------------
-// Text
-//----------------------------------------------------------------------------------------------------------------------
+        std::string string = "Lorem ipsum";
 
-struct TextViewConfig {
-    const sf::Font* font = FontManager::getDefaultFont();
+        unsigned int characterSize = 20;
 
-    std::string string = "Lorem ipsum";
+        bool fill = true;
+        bool edge = false;
 
-    unsigned int characterSize = 20;
+        sf::Color fillColor = sf::Color::White;
+        sf::Color edgeColor = sf::Color::Black;
 
-    bool fill = true;
-    bool edge = false;
+        float edgeThickness = 1.0f;
+    };
 
-    sf::Color fillColor = sf::Color::White;
-    sf::Color edgeColor = sf::Color::Black;
+    inline const TextViewConfig defaultTextConfig = {};
 
-    float edgeThickness = 1.0f;
-};
+    //----------------------------------------------------------------------------------------------------------------------
+    // Sprite
+    //----------------------------------------------------------------------------------------------------------------------
 
-inline const TextViewConfig defaultTextConfig = {};
+    struct SpriteViewConfig {
+        std::pair<float, float> origin = {0.f, 0.f};
+        float rotation = 0.0f;
 
-//----------------------------------------------------------------------------------------------------------------------
-// Sprite
-//----------------------------------------------------------------------------------------------------------------------
+        const sf::Texture* texture = TextureManager::getDefaultTexture();
 
-struct SpriteViewConfig {
-    std::pair<float, float> origin = {0.f, 0.f};
-    float rotation = 0.0f;
+        sf::IntRect textureRect = sf::IntRect();
 
-    const sf::Texture* texture = TextureManager::getDefaultTexture();
+        bool useTextureRect = false;
 
-    sf::IntRect textureRect = sf::IntRect();
+        sf::Color color = sf::Color::White;
+    };
+    inline const SpriteViewConfig defaultSpriteConfig = {};
 
-    bool useTextureRect = false;
+    //----------------------------------------------------------------------------------------------------------------------
+    // Button
+    //----------------------------------------------------------------------------------------------------------------------
+    struct ButtonViewConfig {
+        //Window-space
+        PolygonViewConfig polygonConfig = defaultPolygonConfig;
+        TextViewConfig textConfig = defaultTextConfig;
+        SpriteViewConfig spriteConfig = defaultSpriteConfig;
+    };
 
-    sf::Color color = sf::Color::White;
-};
-inline const SpriteViewConfig defaultSpriteConfig = {};
+    inline const ButtonViewConfig defaultButtonConfig = {};
 
-//----------------------------------------------------------------------------------------------------------------------
-// Button
-//----------------------------------------------------------------------------------------------------------------------
-struct ButtonViewConfig {
-    //Window-space
-    PolygonViewConfig polygonConfig = defaultPolygonConfig;
-    TextViewConfig textConfig = defaultTextConfig;
-    SpriteViewConfig spriteConfig = defaultSpriteConfig;
-};
-
-inline const ButtonViewConfig defaultButtonConfig = {};
-
-//----------------------------------------------------------------------------------------------------------------------
-// Variant
-//----------------------------------------------------------------------------------------------------------------------
-using ViewConfig = std::variant<
-    PolygonViewConfig,
-    EllipseViewConfig,
-    GridViewConfig,
-    TextViewConfig,
-    SpriteViewConfig,
-    ButtonViewConfig
->;
+    //----------------------------------------------------------------------------------------------------------------------
+    // Variant
+    //----------------------------------------------------------------------------------------------------------------------
+    using ViewConfig = std::variant<
+        PolygonViewConfig,
+        EllipseViewConfig,
+        GridViewConfig,
+        TextViewConfig,
+        SpriteViewConfig,
+        ButtonViewConfig
+    >;
+}
 
 #endif //DISPLAYENGINE_VIEWCONFIG_H

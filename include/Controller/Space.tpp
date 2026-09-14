@@ -5,25 +5,27 @@
 
 #include "States/StateFactory.h"
 
-class Space;
+namespace eng {
+    class Space;
 
-template<typename StateT, typename... Args>
-void Space::start(Args&&... args)
-{
-    pushState<StateT>(
-        std::forward<Args>(args)...
-    );
-}
-
-template<typename StateT, typename... Args>
-void Space::pushState(Args&&... args)
-{
-    stateManager->pushState(
-        StateFactory::createState<StateT>(
-            *ctx,
+    template<typename StateT, typename... Args>
+    void Space::start(Args&&... args)
+    {
+        pushState<StateT>(
             std::forward<Args>(args)...
-        )
-    );
+        );
+    }
+
+    template<typename StateT, typename... Args>
+    void Space::pushState(Args&&... args)
+    {
+        stateManager->pushState(
+            StateFactory::createState<StateT>(
+                *ctx,
+                std::forward<Args>(args)...
+            )
+        );
+    }
 }
 
 #endif

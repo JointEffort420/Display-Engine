@@ -5,30 +5,32 @@
 #include "Time/Timer.h"
 #include <algorithm>
 
-Timer::Timer(float durationSeconds, bool isRepeating)
-    : duration(durationSeconds), remaining(durationSeconds), repeating(isRepeating) {}
+namespace eng {
+    Timer::Timer(float durationSeconds, bool isRepeating)
+        : duration(durationSeconds), remaining(durationSeconds), repeating(isRepeating) {}
 
-Timer::Timer(float durationSeconds, std::function<void()> onExpiredCallback, bool isRepeating)
-    : duration(durationSeconds), remaining(durationSeconds), repeating(isRepeating), callback(std::move(onExpiredCallback)) {}
+    Timer::Timer(float durationSeconds, std::function<void()> onExpiredCallback, bool isRepeating)
+        : duration(durationSeconds), remaining(durationSeconds), repeating(isRepeating), callback(std::move(onExpiredCallback)) {}
 
-void Timer::update(float deltaTime) {
-    if (expired) return;
+    void Timer::update(float deltaTime) {
+        if (expired) return;
 
-    remaining -= deltaTime;
+        remaining -= deltaTime;
 
-    if (remaining <= 0.0f) {
-        if (callback) callback();
+        if (remaining <= 0.0f) {
+            if (callback) callback();
 
-        if (repeating) {
-            remaining += duration; // Retain extra precision offset
-        } else {
-            remaining = 0.0f;
-            expired = true;
+            if (repeating) {
+                remaining += duration; // Retain extra precision offset
+            } else {
+                remaining = 0.0f;
+                expired = true;
+            }
         }
     }
-}
 
-void Timer::reset() {
-    remaining = duration;
-    expired = false;
+    void Timer::reset() {
+        remaining = duration;
+        expired = false;
+    }
 }

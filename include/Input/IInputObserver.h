@@ -7,17 +7,19 @@
 
 #include <utility>
 
-class IInputObserver {
-private:
+namespace eng {
+    class IInputObserver {
+    private:
 
-public:
-    IInputObserver() = default;
-    virtual ~IInputObserver() = default;
+    public:
+        IInputObserver() = default;
+        virtual ~IInputObserver() = default;
 
-    virtual bool onLeftPressed(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
-    virtual bool onLeftReleased(const std::pair<unsigned int, unsigned int>& windowCoordinates) =0;
-    virtual bool onMouseMoved(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
-    virtual void onResize() = 0;
-};
+        virtual bool onLeftPressed(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
+        virtual bool onLeftReleased(const std::pair<unsigned int, unsigned int>& windowCoordinates) =0;
+        virtual bool onMouseMoved(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
+        virtual void onResize() = 0;
+    };
+}
 
 #endif //DISPLAYENGINE_IINPUTOBSERVER_H

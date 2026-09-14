@@ -13,75 +13,77 @@
 #include "CompositeView.h"
 #include "Logic/ModelFactory.h"
 
-class ButtonModel;
-class PolygonView;
-class TextView;
-class SpriteView;
+namespace eng {
+    class ButtonModel;
+    class PolygonView;
+    class TextView;
+    class SpriteView;
 
-class ButtonView : public CompositeView {
-private:
-    const ButtonModel& model;
+    class ButtonView : public CompositeView {
+    private:
+        const ButtonModel& model;
 
-    PolygonView& background;
-    TextView& text;
-    SpriteView& icon;
+        PolygonView& background;
+        TextView& text;
+        SpriteView& icon;
 
-    sf::Color baseColor;
-    sf::Color hoveredColor;
-    sf::Color pressedColor;
+        sf::Color baseColor;
+        sf::Color hoveredColor;
+        sf::Color pressedColor;
 
-public:
-    //----------------------------------------------------------------------------------------------------------------------
-    // Constructors & Destructor
-    //----------------------------------------------------------------------------------------------------------------------
-    ButtonView() = delete;
+    public:
+        //----------------------------------------------------------------------------------------------------------------------
+        // Constructors & Destructor
+        //----------------------------------------------------------------------------------------------------------------------
+        ButtonView() = delete;
 
-    ButtonView(
-        ViewFactory::Key key,
-        const ButtonModel& model,
-        Window& window,
-        Camera& camera,
-        std::unique_ptr<PolygonView> background,
-        std::unique_ptr<TextView> text,
-        std::unique_ptr<SpriteView> icon
-    );
+        ButtonView(
+            ViewFactory::Key key,
+            const ButtonModel& model,
+            Window& window,
+            Camera& camera,
+            std::unique_ptr<PolygonView> background,
+            std::unique_ptr<TextView> text,
+            std::unique_ptr<SpriteView> icon
+        );
 
-    //----------------------------------------------------------------------------------------------------------------------
-    // Setters
-    //----------------------------------------------------------------------------------------------------------------------
-    void setColors(
-        const sf::Color& buttonColor,
-        const sf::Color& lineColor,
-        const sf::Color& textColor
-    );
-    void setColors(
-        const sf::Color& buttonColor,
-        const sf::Color& lineColor,
-        const sf::Color& textColor,
-        const sf::Color& hoveredColor,
-        const sf::Color& pressedColor
-    );
+        //----------------------------------------------------------------------------------------------------------------------
+        // Setters
+        //----------------------------------------------------------------------------------------------------------------------
+        void setColors(
+            const sf::Color& buttonColor,
+            const sf::Color& lineColor,
+            const sf::Color& textColor
+        );
+        void setColors(
+            const sf::Color& buttonColor,
+            const sf::Color& lineColor,
+            const sf::Color& textColor,
+            const sf::Color& hoveredColor,
+            const sf::Color& pressedColor
+        );
 
-    void setText(const std::string& text);
-    void setFont(const sf::Font* font);
+        void setText(const std::string& text);
+        void setFont(const sf::Font* font);
 
-    //----------------------------------------------------------------------------------------------------------------------
-    // Getters
-    //----------------------------------------------------------------------------------------------------------------------
-    [[nodiscard]] std::string getText() const;
+        //----------------------------------------------------------------------------------------------------------------------
+        // Getters
+        //----------------------------------------------------------------------------------------------------------------------
+        [[nodiscard]] std::string getText() const;
 
-    [[nodiscard]] sf::Color getCurrentColor() const;
+        [[nodiscard]] sf::Color getCurrentColor() const;
 
-    //----------------------------------------------------------------------------------------------------------------------
-    // Logic
-    //----------------------------------------------------------------------------------------------------------------------
-    void update() override;
-    void calibrate() override;
+        //----------------------------------------------------------------------------------------------------------------------
+        // Logic
+        //----------------------------------------------------------------------------------------------------------------------
+        void update() override;
+        void calibrate() override;
 
-    //----------------------------------------------------------------------------------------------------------------------
-    // View, Draw, Print & Debug
-    //----------------------------------------------------------------------------------------------------------------------
-    void draw() override;
-};
+        //----------------------------------------------------------------------------------------------------------------------
+        // View, Draw, Print & Debug
+        //----------------------------------------------------------------------------------------------------------------------
+        void draw() override;
+    };
+}
 
 #endif //DISPLAYENGINE_BUTTONVIEW_H

@@ -14,13 +14,15 @@
 // hand out stable, non-owning pointers to them. Nothing else may construct
 // or own an sf::Font that a View could end up pointing at.
 
-class FontManager {
-private:
-    static std::unordered_map<std::string, sf::Font>& getCache();
+namespace eng {
+    class FontManager {
+    private:
+        static std::unordered_map<std::string, sf::Font>& getCache();
 
-public:
-    static const sf::Font* getDefaultFont();
-    static const sf::Font* get(const std::string& path);
-};
+    public:
+        static const sf::Font* getDefaultFont();
+        static const sf::Font* get(const std::string& path);
+    };
+}
 
 #endif //DISPLAYENGINE_FONTMANAGER_H

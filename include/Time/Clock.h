@@ -7,33 +7,35 @@
 
 #include <chrono>
 
-class Clock {
-private:
-    using ClockType = std::chrono::steady_clock;
+namespace eng {
+    class Clock {
+    private:
+        using ClockType = std::chrono::steady_clock;
 
-    ClockType::time_point previousTime;
-    ClockType::time_point currentTime;
+        ClockType::time_point previousTime;
+        ClockType::time_point currentTime;
 
-    float deltaTime{0.0f};
-    float elapsedTime{0.0f};
+        float deltaTime{0.0f};
+        float elapsedTime{0.0f};
 
-    float timeScale{1.0f};
-    bool paused;
+        float timeScale{1.0f};
+        bool paused;
 
-public:
-    Clock();
+    public:
+        Clock();
 
-    void update();
+        void update();
 
-    [[nodiscard]] float getDeltaTime() const { return deltaTime; }
-    [[nodiscard]] float getElapsedTime() const { return elapsedTime; }
+        [[nodiscard]] float getDeltaTime() const { return deltaTime; }
+        [[nodiscard]] float getElapsedTime() const { return elapsedTime; }
 
-    void pause() { paused = true; }
-    void resume() { paused = false; }
-    [[nodiscard]] bool isPaused() const { return paused; }
+        void pause() { paused = true; }
+        void resume() { paused = false; }
+        [[nodiscard]] bool isPaused() const { return paused; }
 
-    void setTimeScale(float scale) { timeScale = scale > 0.0f ? scale : 0.0f; }
-    [[nodiscard]] float getTimeScale() const { return timeScale; }
-};
+        void setTimeScale(float scale) { timeScale = scale > 0.0f ? scale : 0.0f; }
+        [[nodiscard]] float getTimeScale() const { return timeScale; }
+    };
+}
 
 #endif //DISPLAYENGINE_CLOCK_H

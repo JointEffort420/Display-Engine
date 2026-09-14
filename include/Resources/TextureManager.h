@@ -10,14 +10,16 @@
 #include <unordered_map>
 #include <iostream>
 
-// Same contract as FontManager, for sf::Texture.
-class TextureManager {
-private:
-    static std::unordered_map<std::string, sf::Texture>& getCache();
+namespace eng {
+    // Same contract as FontManager, for sf::Texture.
+    class TextureManager {
+    private:
+        static std::unordered_map<std::string, sf::Texture>& getCache();
 
-public:
-    static const sf::Texture* getDefaultTexture();
-    static const sf::Texture* get(const std::string& path);
-};
+    public:
+        static const sf::Texture* getDefaultTexture();
+        static const sf::Texture* get(const std::string& path);
+    };
+}
 
 #endif //DISPLAYENGINE_TEXTUREMANAGER_H

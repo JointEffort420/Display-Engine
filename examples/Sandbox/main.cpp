@@ -10,7 +10,7 @@
 
 int main() {
     std::cout << "Sandbox initiated" << std::endl;
-    Space space = Space("Testwindow");
+    eng::Space space = eng::Space("Testwindow");
     space.start<TestState>();
     space.run();
 }

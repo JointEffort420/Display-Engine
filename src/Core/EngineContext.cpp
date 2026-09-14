@@ -3,3 +3,7 @@
 //
 
 #include "Core/EngineContext.h"
+
+namespace eng {
+
+}

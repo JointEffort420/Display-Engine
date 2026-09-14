@@ -8,120 +8,122 @@
 #include <iostream>
 #include <ostream>
 
-Input* Input::singletonInstance = nullptr; //The global variable tick
+namespace eng {
+    Input* Input::singletonInstance = nullptr; //The global variable tick
 
-Input::Input() = default;
+    Input::Input() = default;
 
-Input* Input::CreateInstance() {
-    if (!singletonInstance)
-        singletonInstance = new Input();
-    return singletonInstance;
-}
-
-
-Input* Input::GetInstance() {
-    if (!singletonInstance) {
-        CreateInstance();
+    Input* Input::CreateInstance() {
+        if (!singletonInstance)
+            singletonInstance = new Input();
+        return singletonInstance;
     }
-    return singletonInstance;
-}
 
-void Input::DestroyInstance() {
-    delete singletonInstance;
-    singletonInstance = nullptr;
-}
 
-void Input::handleEvent(const sf::Event& event) {
+    Input* Input::GetInstance() {
+        if (!singletonInstance) {
+            CreateInstance();
+        }
+        return singletonInstance;
+    }
 
-    if (event.is<sf::Event::MouseButtonPressed>()) {
-        const auto* mouse =
-            event.getIf<sf::Event::MouseButtonPressed>();
+    void Input::DestroyInstance() {
+        delete singletonInstance;
+        singletonInstance = nullptr;
+    }
 
-        if (!mouse) return;
+    void Input::handleEvent(const sf::Event& event) {
 
-        if (mouse->button == sf::Mouse::Button::Left) {
+        if (event.is<sf::Event::MouseButtonPressed>()) {
+            const auto* mouse =
+                event.getIf<sf::Event::MouseButtonPressed>();
+
+            if (!mouse) return;
+
+            if (mouse->button == sf::Mouse::Button::Left) {
+                const auto coordinates =
+                    std::make_pair(
+                        static_cast<unsigned int>(mouse->position.x),
+                        static_cast<unsigned int>(mouse->position.y)
+                    );
+
+                notifyLeftPressed(coordinates);
+            }
+        }
+
+        else if (event.is<sf::Event::MouseButtonReleased>()) {
+            const auto* mouse =
+                event.getIf<sf::Event::MouseButtonReleased>();
+
+            if (!mouse) return;
+
+            if (mouse->button == sf::Mouse::Button::Left) {
+                const auto coordinates =
+                    std::make_pair(
+                        static_cast<unsigned int>(mouse->position.x),
+                        static_cast<unsigned int>(mouse->position.y)
+                    );
+
+                notifyLeftReleased(coordinates);
+            }
+        }
+
+        else if (event.is<sf::Event::MouseMoved>()) {
+            const auto* mouse =
+                event.getIf<sf::Event::MouseMoved>();
+
+            if (!mouse) return;
+
             const auto coordinates =
                 std::make_pair(
                     static_cast<unsigned int>(mouse->position.x),
                     static_cast<unsigned int>(mouse->position.y)
                 );
 
-            notifyLeftPressed(coordinates);
+            notifyMouseMoved(coordinates);
+        }
+
+        else if (event.is<sf::Event::Resized>()) {
+            notifyResize();
         }
     }
 
-    else if (event.is<sf::Event::MouseButtonReleased>()) {
-        const auto* mouse =
-            event.getIf<sf::Event::MouseButtonReleased>();
-
-        if (!mouse) return;
-
-        if (mouse->button == sf::Mouse::Button::Left) {
-            const auto coordinates =
-                std::make_pair(
-                    static_cast<unsigned int>(mouse->position.x),
-                    static_cast<unsigned int>(mouse->position.y)
-                );
-
-            notifyLeftReleased(coordinates);
+    // Observer Pattern Management
+    void Input::attach(IInputObserver* observer) {
+        if (observer) {
+            observers.push_back(observer);
         }
     }
 
-    else if (event.is<sf::Event::MouseMoved>()) {
-        const auto* mouse =
-            event.getIf<sf::Event::MouseMoved>();
-
-        if (!mouse) return;
-
-        const auto coordinates =
-            std::make_pair(
-                static_cast<unsigned int>(mouse->position.x),
-                static_cast<unsigned int>(mouse->position.y)
-            );
-
-        notifyMouseMoved(coordinates);
+    void Input::detach(IInputObserver* observer) {
+        observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
     }
 
-    else if (event.is<sf::Event::Resized>()) {
-        notifyResize();
+    void Input::notifyLeftPressed(const std::pair<unsigned int, unsigned int>& coordinates) {
+        for (IInputObserver* observer : observers) {
+            if (observer)
+                observer->onLeftPressed(coordinates);
+        }
     }
-}
 
-// Observer Pattern Management
-void Input::attach(IInputObserver* observer) {
-    if (observer) {
-        observers.push_back(observer);
+    void Input::notifyLeftReleased(const std::pair<unsigned int, unsigned int>& coordinates) {
+        for (IInputObserver* observer : observers) {
+            if (observer)
+                observer->onLeftReleased(coordinates);
+        }
     }
-}
 
-void Input::detach(IInputObserver* observer) {
-    observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
-}
-
-void Input::notifyLeftPressed(const std::pair<unsigned int, unsigned int>& coordinates) {
-    for (IInputObserver* observer : observers) {
-        if (observer)
-            observer->onLeftPressed(coordinates);
+    void Input::notifyMouseMoved(const std::pair<unsigned int, unsigned int>& coordinates) {
+        for (IInputObserver* observer : observers) {
+            if (observer)
+                observer->onMouseMoved(coordinates);
+        }
     }
-}
 
-void Input::notifyLeftReleased(const std::pair<unsigned int, unsigned int>& coordinates) {
-    for (IInputObserver* observer : observers) {
-        if (observer)
-            observer->onLeftReleased(coordinates);
-    }
-}
-
-void Input::notifyMouseMoved(const std::pair<unsigned int, unsigned int>& coordinates) {
-    for (IInputObserver* observer : observers) {
-        if (observer)
-            observer->onMouseMoved(coordinates);
-    }
-}
-
-void Input::notifyResize() {
-    for (IInputObserver* observer : observers) {
-        if (observer)
-            observer->onResize();
+    void Input::notifyResize() {
+        for (IInputObserver* observer : observers) {
+            if (observer)
+                observer->onResize();
+        }
     }
 }

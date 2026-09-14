@@ -4,9 +4,11 @@
 #include <utility>
 #include "States/StateManager.h"
 
-template<typename StateT, typename... Args>
-void State::stateTransition(Args&&... args) {
-    ctx.stateManager.requestPush(StateFactory::createState<StateT>(ctx, std::forward<Args>(args)...));
+namespace eng {
+    template<typename StateT, typename... Args>
+    void State::stateTransition(Args&&... args) {
+        ctx.stateManager.requestPush(StateFactory::createState<StateT>(ctx, std::forward<Args>(args)...));
+    }
 }
 
 #endif

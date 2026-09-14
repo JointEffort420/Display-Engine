@@ -7,7 +7,7 @@
 
 #include <Controller/Space.h>
 
-class TestState : public State {
+class TestState : public eng::State {
 public:
     using State::State;
     void onEnter() override;

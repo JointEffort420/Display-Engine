@@ -10,36 +10,37 @@
 
 #include "IInputObserver.h"
 
-class Input {
-private:
-    Input();
+namespace eng {
+    class Input {
+    private:
+        Input();
 
-    static Input* CreateInstance();
-    static Input *singletonInstance;
+        static Input* CreateInstance();
+        static Input *singletonInstance;
 
-    bool clicked;
+        bool clicked;
 
-    std::vector<IInputObserver*> observers;
+        std::vector<IInputObserver*> observers;
 
-public:
-    //Prevent any move or copies!
-    Input (const Input& copy) = delete;
-    Input& operator= (const Input& copy) = delete;
-    Input (Input&& move) = delete;
-    Input& operator= (Input&& move) = delete;
+    public:
+        //Prevent any move or copies!
+        Input (const Input& copy) = delete;
+        Input& operator= (const Input& copy) = delete;
+        Input (Input&& move) = delete;
+        Input& operator= (Input&& move) = delete;
 
-    static Input* GetInstance();
-    static void DestroyInstance();
-    void handleEvent(const sf::Event& event);
+        static Input* GetInstance();
+        static void DestroyInstance();
+        void handleEvent(const sf::Event& event);
 
-    // Observer Pattern Management
-    void attach(IInputObserver* observer);
-    void detach(IInputObserver* observer);
-    void notifyLeftPressed(const std::pair<unsigned int, unsigned int>& coordinates);
-    void notifyLeftReleased(const std::pair<unsigned int, unsigned int>& coordinates);
-    void notifyMouseMoved(const std::pair<unsigned int, unsigned int>& coordinates);
-    void notifyResize();
-};
-
+        // Observer Pattern Management
+        void attach(IInputObserver* observer);
+        void detach(IInputObserver* observer);
+        void notifyLeftPressed(const std::pair<unsigned int, unsigned int>& coordinates);
+        void notifyLeftReleased(const std::pair<unsigned int, unsigned int>& coordinates);
+        void notifyMouseMoved(const std::pair<unsigned int, unsigned int>& coordinates);
+        void notifyResize();
+    };
+}
 
 #endif //DISPLAYENGINE_INPUT_H

@@ -7,213 +7,215 @@
 
 #include <iostream>
 
-StateManager::StateManager(): IInputObserver() {
-    Input::GetInstance()->attach(this);
-}
-
-StateManager::~StateManager() {
-    Input::GetInstance()->detach(this);
-}
-//----------------------------------------------------------------------------------------------------------------------
-// Getters
-//----------------------------------------------------------------------------------------------------------------------
-bool StateManager::isEmpty() const {return stateStack.empty();}
-std::size_t StateManager::depth() const {return stateStack.size();}
-
-State& StateManager::topState()
-{
-    if (stateStack.empty())
-    {
-        throw std::logic_error(
-            "StateManager::topState() called on empty stack"
-        );
+namespace eng {
+    StateManager::StateManager(): IInputObserver() {
+        Input::GetInstance()->attach(this);
     }
 
-    return *stateStack.back();
-}
+    StateManager::~StateManager() {
+        Input::GetInstance()->detach(this);
+    }
+    //----------------------------------------------------------------------------------------------------------------------
+    // Getters
+    //----------------------------------------------------------------------------------------------------------------------
+    bool StateManager::isEmpty() const {return stateStack.empty();}
+    std::size_t StateManager::depth() const {return stateStack.size();}
 
-const std::vector<std::unique_ptr<State>>& StateManager::getStates() const {
-    return stateStack;
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-// State management
-//----------------------------------------------------------------------------------------------------------------------
-
-void StateManager::pushState(std::unique_ptr<State> state)
-{
-    if (!state)
+    State& StateManager::topState()
     {
-        std::cerr
-            << "StateManager::pushState() called with nullptr — ignored"
-            << std::endl;
+        if (stateStack.empty())
+        {
+            throw std::logic_error(
+                "StateManager::topState() called on empty stack"
+            );
+        }
 
-        return;
+        return *stateStack.back();
     }
 
-    stateStack.push_back(std::move(state));
-}
-
-void StateManager::requestPush(std::unique_ptr<State> state) {
-    pendingTransitions.push_back({PendingTransition::Type::Push, std::move(state)});
-}
-
-void StateManager::popState()
-{
-    if (stateStack.empty())
-    {
-        std::cerr
-            << "StateManager::popState() called on an empty stack — ignored"
-            << std::endl;
-
-        return;
+    const std::vector<std::unique_ptr<State>>& StateManager::getStates() const {
+        return stateStack;
     }
 
-    if (stateStack.size() == 1)
-    {
-        std::cerr
-            << "StateManager::popState() refused: "
-               "cannot pop the last remaining state"
-            << std::endl;
+    //----------------------------------------------------------------------------------------------------------------------
+    // State management
+    //----------------------------------------------------------------------------------------------------------------------
 
-        return;
+    void StateManager::pushState(std::unique_ptr<State> state)
+    {
+        if (!state)
+        {
+            std::cerr
+                << "StateManager::pushState() called with nullptr — ignored"
+                << std::endl;
+
+            return;
+        }
+
+        stateStack.push_back(std::move(state));
     }
 
-    stateStack.back()->deactivate();
-    stateStack.back()->hide();
-    stateStack.back()->detachInput();
-    stateStack.back()->onExit();
+    void StateManager::requestPush(std::unique_ptr<State> state) {
+        pendingTransitions.push_back({PendingTransition::Type::Push, std::move(state)});
+    }
 
-    stateStack.pop_back();
-}
+    void StateManager::popState()
+    {
+        if (stateStack.empty())
+        {
+            std::cerr
+                << "StateManager::popState() called on an empty stack — ignored"
+                << std::endl;
 
-void StateManager::requestPop() {
-    pendingTransitions.push_back({PendingTransition::Type::Push, nullptr});
-}
+            return;
+        }
 
-void StateManager::applyPendingTransitions() {
-    //Here the entries in 'pendingTransitions' get applied
-    while (!pendingTransitions.empty()) {
-        std::vector<PendingTransition> batch = std::move(pendingTransitions);
-        pendingTransitions.clear();
-        for (auto& entry : batch) {
-            if (entry.type == PendingTransition::Type::Push) {
-                pushState(std::move(entry.state));
-            }else if (entry.type == PendingTransition::Type::Pop) {
-                popState();
-            }else {
-                std::cerr << "StateManager::applyPendingTransitions: Unexpected transition request" << std::endl;
+        if (stateStack.size() == 1)
+        {
+            std::cerr
+                << "StateManager::popState() refused: "
+                   "cannot pop the last remaining state"
+                << std::endl;
+
+            return;
+        }
+
+        stateStack.back()->deactivate();
+        stateStack.back()->hide();
+        stateStack.back()->detachInput();
+        stateStack.back()->onExit();
+
+        stateStack.pop_back();
+    }
+
+    void StateManager::requestPop() {
+        pendingTransitions.push_back({PendingTransition::Type::Push, nullptr});
+    }
+
+    void StateManager::applyPendingTransitions() {
+        //Here the entries in 'pendingTransitions' get applied
+        while (!pendingTransitions.empty()) {
+            std::vector<PendingTransition> batch = std::move(pendingTransitions);
+            pendingTransitions.clear();
+            for (auto& entry : batch) {
+                if (entry.type == PendingTransition::Type::Push) {
+                    pushState(std::move(entry.state));
+                }else if (entry.type == PendingTransition::Type::Pop) {
+                    popState();
+                }else {
+                    std::cerr << "StateManager::applyPendingTransitions: Unexpected transition request" << std::endl;
+                }
             }
         }
     }
-}
 
-//----------------------------------------------------------------------------------------------------------------------
-// Logic
-//----------------------------------------------------------------------------------------------------------------------
-void StateManager::update() {
-    if (stateStack.empty()) {return;}
-    for (auto& state : stateStack) {state->update();}
-    applyPendingTransitions(); //Only after iterator-logic. Prevents UB
-}
+    //----------------------------------------------------------------------------------------------------------------------
+    // Logic
+    //----------------------------------------------------------------------------------------------------------------------
+    void StateManager::update() {
+        if (stateStack.empty()) {return;}
+        for (auto& state : stateStack) {state->update();}
+        applyPendingTransitions(); //Only after iterator-logic. Prevents UB
+    }
 
-//----------------------------------------------------------------------------------------------------------------------
-// Input
-//----------------------------------------------------------------------------------------------------------------------
-bool StateManager::onLeftPressed(
-    const std::pair<unsigned int, unsigned int>& coordinates
-)
-{
-    for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
+    //----------------------------------------------------------------------------------------------------------------------
+    // Input
+    //----------------------------------------------------------------------------------------------------------------------
+    bool StateManager::onLeftPressed(
+        const std::pair<unsigned int, unsigned int>& coordinates
+    )
     {
-        State& state = **it;
-
-        if (!state.isAttachedToInput())
+        for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
         {
-            continue;
+            State& state = **it;
+
+            if (!state.isAttachedToInput())
+            {
+                continue;
+            }
+
+            if (state.onLeftPressed(coordinates))
+            {
+                return true;
+            }
         }
 
-        if (state.onLeftPressed(coordinates))
+        return false;
+    }
+
+    bool StateManager::onLeftReleased(
+        const std::pair<unsigned int, unsigned int>& coordinates
+    )
+    {
+        for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
         {
-            return true;
+            State& state = **it;
+
+            if (!state.isAttachedToInput())
+            {
+                continue;
+            }
+
+            if (state.onLeftReleased(coordinates))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool StateManager::onMouseMoved(
+        const std::pair<unsigned int, unsigned int>& coordinates
+    )
+    {
+        for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
+        {
+            State& state = **it;
+
+            if (!state.isAttachedToInput())
+            {
+                continue;
+            }
+
+            if (state.onMouseMoved(coordinates))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void StateManager::onResize() {
+        for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it) {
+            State& state = **it;
+            state.onResize();
         }
     }
 
-    return false;
-}
-
-bool StateManager::onLeftReleased(
-    const std::pair<unsigned int, unsigned int>& coordinates
-)
-{
-    for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
+    //----------------------------------------------------------------------------------------------------------------------
+    // Drawing
+    //----------------------------------------------------------------------------------------------------------------------
+    void StateManager::draw()
     {
-        State& state = **it;
-
-        if (!state.isAttachedToInput())
+        if (stateStack.empty())
         {
-            continue;
+            return;
         }
 
-        if (state.onLeftReleased(coordinates))
+        // Bottom -> top.
+        //
+        // This is important for overlays:
+        //
+        // GameState
+        // PauseState
+        //
+        // GameState is drawn first, then PauseState over it.
+
+        for (auto& state : stateStack)
         {
-            return true;
+            state->draw();
         }
-    }
-
-    return false;
-}
-
-bool StateManager::onMouseMoved(
-    const std::pair<unsigned int, unsigned int>& coordinates
-)
-{
-    for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
-    {
-        State& state = **it;
-
-        if (!state.isAttachedToInput())
-        {
-            continue;
-        }
-
-        if (state.onMouseMoved(coordinates))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void StateManager::onResize() {
-    for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it) {
-        State& state = **it;
-        state.onResize();
-    }
-}
-
-//----------------------------------------------------------------------------------------------------------------------
-// Drawing
-//----------------------------------------------------------------------------------------------------------------------
-void StateManager::draw()
-{
-    if (stateStack.empty())
-    {
-        return;
-    }
-
-    // Bottom -> top.
-    //
-    // This is important for overlays:
-    //
-    // GameState
-    // PauseState
-    //
-    // GameState is drawn first, then PauseState over it.
-
-    for (auto& state : stateStack)
-    {
-        state->draw();
     }
 }

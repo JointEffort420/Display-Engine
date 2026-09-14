@@ -5,45 +5,42 @@
 #include "Logic/ButtonModel.h"
 #include "Rendering/ButtonView.h"
 
-//----------------------------------------------------------------------------------------------------------------------
-//Constructors & Destructor
-//----------------------------------------------------------------------------------------------------------------------
-ButtonModel::ButtonModel(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor): Model(key, position, size, anchor) {}
+namespace eng {
+    //----------------------------------------------------------------------------------------------------------------------
+    //Constructors & Destructor
+    //----------------------------------------------------------------------------------------------------------------------
+    ButtonModel::ButtonModel(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor): Model(key, position, size, anchor) {}
 
-//----------------------------------------------------------------------------------------------------------------------
-//Setters
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
+    //Setters
+    //----------------------------------------------------------------------------------------------------------------------
 
-//----------------------------------------------------------------------------------------------------------------------
-//Getters
-//----------------------------------------------------------------------------------------------------------------------
-bool ButtonModel::isHovered() const {return hovered;}
-bool ButtonModel::hasBeenPressed() const {return beenPressed;}
-bool ButtonModel::isBeingPressed() const {return beingPressed;}
+    //----------------------------------------------------------------------------------------------------------------------
+    //Getters
+    //----------------------------------------------------------------------------------------------------------------------
+    bool ButtonModel::isHovered() const {return hovered;}
+    bool ButtonModel::hasBeenPressed() const {return beenPressed;}
+    bool ButtonModel::isBeingPressed() const {return beingPressed;}
 
-//----------------------------------------------------------------------------------------------------------------------
-//Logic
-//----------------------------------------------------------------------------------------------------------------------
-void ButtonModel::updateModel() {
-    reset();
+    //----------------------------------------------------------------------------------------------------------------------
+    //Logic
+    //----------------------------------------------------------------------------------------------------------------------
+    void ButtonModel::updateModel() {
+        reset();
+    }
+    bool ButtonModel::contains(const std::pair<float, float>& worldCoordinates) const {return isAt(worldCoordinates);}
+    void ButtonModel::onMouseMoved(const std::pair<float, float>& worldCoordinates) {hovered = contains(worldCoordinates);}
+    void ButtonModel::onMouseReleased(const std::pair<float, float>& worldCoordinates) {
+        if (!beingPressed)
+            return;
+        beenPressed = contains(worldCoordinates) && beingPressed;
+        beingPressed = false;
+    }
+    void ButtonModel::onMousePressed(const std::pair<float, float>& worldCoordinates) {
+        beingPressed = contains(worldCoordinates);
+    }
+
+    void ButtonModel::reset() {
+        beenPressed = false;
+    }
 }
-bool ButtonModel::contains(const std::pair<float, float>& worldCoordinates) const {return isAt(worldCoordinates);}
-void ButtonModel::onMouseMoved(const std::pair<float, float>& worldCoordinates) {hovered = contains(worldCoordinates);}
-void ButtonModel::onMouseReleased(const std::pair<float, float>& worldCoordinates) {
-    if (!beingPressed)
-        return;
-    beenPressed = contains(worldCoordinates) && beingPressed;
-    beingPressed = false;
-}
-void ButtonModel::onMousePressed(const std::pair<float, float>& worldCoordinates) {
-    beingPressed = contains(worldCoordinates);
-}
-
-void ButtonModel::reset() {
-    beenPressed = false;
-}
-
-
-//----------------------------------------------------------------------------------------------------------------------
-//View, Draw, Print & Debug
-//----------------------------------------------------------------------------------------------------------------------

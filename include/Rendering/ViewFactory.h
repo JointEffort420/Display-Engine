@@ -10,27 +10,29 @@
 #include "Core/EngineContext.h"
 #include "Rendering/ViewConfig.h"
 
-class Model;
-class View;
+namespace eng {
+    class Model;
+    class View;
 
-class ViewFactory {
-public:
-    ViewFactory() = default;
+    class ViewFactory {
+    public:
+        ViewFactory() = default;
 
-    friend class ModelFactory;
+        friend class ModelFactory;
 
-    class Key {
-        friend class ViewFactory;
+        class Key {
+            friend class ViewFactory;
+        private:
+            Key() = default;
+        };
+
     private:
-        Key() = default;
+        static std::unique_ptr<View> createView(
+            EngineContext& ctx,
+            const Model& model,
+            const ViewConfig& config
+        );
     };
-
-private:
-    static std::unique_ptr<View> createView(
-        EngineContext& ctx,
-        const Model& model,
-        const ViewConfig& config
-    );
-};
+}
 
 #endif //DISPLAYENGINE_VIEWFACTORY_H
