@@ -31,40 +31,67 @@ void GridView::setColors(const sf::Color& ac, const sf::Color& dc, const sf::Col
 //----------------------------------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------------------------------
-//Subscribtions
+// Logic
 //----------------------------------------------------------------------------------------------------------------------
-
-//----------------------------------------------------------------------------------------------------------------------
-//View, Draw, Print & Debug
-//----------------------------------------------------------------------------------------------------------------------
-void GridView::draw() {
-    //most calculations here should be outsourced to GridView::calibrate()
+void GridView::calibrate() {
     const auto [columns, rows] = grid.getColRowCount();
+    if (columns == 0 || rows == 0) {
+        cellShapes.clear();
+        return;
+    }
+
+    cellShapes.resize(columns * rows);
 
     const auto gridPosition = grid.getPosition();
     const auto gridSize = grid.getSize();
 
+    const float colWidth = gridSize.first / static_cast<float>(columns);
+    const float rowHeight = gridSize.second / static_cast<float>(rows);
+
     for (unsigned int row = 0; row < rows; ++row) {
         for (unsigned int column = 0; column < columns; ++column) {
+            const float leftWorld = gridPosition.first + (static_cast<float>(column) * colWidth);
+            const float rightWorld = leftWorld + colWidth;
+            const float topWorld = gridPosition.second + (static_cast<float>(row) * rowHeight);
+            const float bottomWorld = topWorld + rowHeight;
 
-            const float leftWorld = gridPosition.first + (static_cast<float>(column) / columns) * gridSize.first;
-            const float rightWorld = gridPosition.first + (static_cast<float>(column + 1) / columns) * gridSize.first;
-            const float topWorld = gridPosition.second + (static_cast<float>(row) / rows) * gridSize.second;
-            const float bottomWorld = gridPosition.second + (static_cast<float>(row + 1) / rows) * gridSize.second;
             const auto topLeft = getCamera().worldToWindowPosition({leftWorld, topWorld});
-            const auto bottomRight = getCamera().worldToWindowPosition( {rightWorld, bottomWorld});
+            const auto bottomRight = getCamera().worldToWindowPosition({rightWorld, bottomWorld});
 
-            sf::RectangleShape shape;
+            const float cellWidth = (bottomRight.first - topLeft.first) - (2.0f * lineWidth);
+            const float cellHeight = (bottomRight.second - topLeft.second) - (2.0f * lineWidth);
+
+            std::size_t index = row * columns + column;
+            sf::RectangleShape& shape = cellShapes[index];
 
             shape.setPosition({topLeft.first + lineWidth, topLeft.second + lineWidth});
-            shape.setSize( {bottomRight.first - topLeft.first - 2 * lineWidth, bottomRight.second - topLeft.second - 2 * lineWidth});
-
-            const Cell* cell = grid.getConstCell({column, row});
-
-            shape.setFillColor(cell->alive ? aliveColor : deadColor);
-
+            shape.setSize({cellWidth > 0.0f ? cellWidth : 0.0f, cellHeight > 0.0f ? cellHeight : 0.0f});
             shape.setOutlineThickness(lineWidth);
             shape.setOutlineColor(gridLineColor);
+        }
+    }
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+// View, Draw, Print & Debug
+//----------------------------------------------------------------------------------------------------------------------
+void GridView::draw() {
+    if (!isVisible()) {
+        return;
+    }
+
+    const auto [columns, rows] = grid.getColRowCount();
+    if (cellShapes.size() != columns * rows) {
+        calibrate();
+    }
+
+    for (unsigned int row = 0; row < rows; ++row) {
+        for (unsigned int column = 0; column < columns; ++column) {
+            const Cell* cell = grid.getConstCell({column, row});
+            std::size_t index = row * columns + column;
+
+            sf::RectangleShape& shape = cellShapes[index];
+            shape.setFillColor(cell->alive ? aliveColor : deadColor);
 
             getWindow().draw(shape);
         }

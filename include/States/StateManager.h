@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include "Core/IInputObserver.h"
+#include "../Input/IInputObserver.h"
 
 class State;
 
@@ -45,13 +45,10 @@ public:
     // Getters
     //------------------------------------------------------------------------------------------------------------------
 
-    [[nodiscard]]
-    bool isEmpty() const;
-
-    [[nodiscard]]
-    std::size_t depth() const;
-
-    State& topState();
+    [[nodiscard]] bool isEmpty() const;
+    [[nodiscard]] std::size_t depth() const;
+    [[nodiscard]] State& topState();
+    [[nodiscard]] const std::vector<std::unique_ptr<State>>& getStates() const;
 
     //------------------------------------------------------------------------------------------------------------------
     // State management
@@ -72,6 +69,7 @@ public:
     bool onLeftPressed(const std::pair<unsigned int, unsigned int> &windowCoordinates) override;
     bool onLeftReleased(const std::pair<unsigned int, unsigned int> &windowCoordinates) override;
     bool onMouseMoved(const std::pair<unsigned int, unsigned int> &windowCoordinates) override;
+    void onResize() override;
 
     //------------------------------------------------------------------------------------------------------------------
     // Drawing

@@ -5,23 +5,30 @@
 #ifndef DISPLAYENGINE_STATE_H
 #define DISPLAYENGINE_STATE_H
 
+#include <functional>
+
 #include "StateFactory.h"
-#include "../Core/IInputObserver.h"
+#include "../Input/IInputObserver.h"
 #include "Logic/ModelFactory.h"
 #include "Logic/Model.h"
 #include "Input/Input.h"
+#include "Time/TimerManager.h"
 
 class StateManager;
 
 class State {
 private:
     EngineContext& ctx;
-
+    std::unique_ptr<TimerManager> timers;
     std::vector<std::unique_ptr<Model>> models;
 
     bool listening;//Determines wether state should be subscriber to input
     bool showing ;//Determines wether state is drawn
     bool updating ;//Determines wether state is updating
+
+protected:
+    void after(float seconds, std::function<void()> callback);
+    void every(float seconds, std::function<void()> callback);
 
 public:
     virtual ~State() = default;
@@ -36,7 +43,7 @@ public:
     //Setters
     //----------------------------------------------------------------------------------------------------------------------
     virtual void onEnter() = 0;
-    virtual void onExit() = 0;
+    virtual void onExit();
 
     void activate();
     void deactivate();
@@ -51,6 +58,7 @@ public:
     //Getters
     //----------------------------------------------------------------------------------------------------------------------
     [[nodiscard]] EngineContext& getCtx();
+    [[nodiscard]] std::pair<float, float> getSpaceSize() const;
     [[nodiscard]] const std::vector<std::unique_ptr<Model>>& getModels() const;
     [[nodiscard]] bool isActive()const;
     [[nodiscard]] bool isShowing()const;
@@ -62,6 +70,7 @@ public:
     virtual void update();
     virtual void updateModels();
     virtual void updateViews();
+    void reset();
 
     template<typename StateT, typename... Args>
     void stateTransition(Args&&... args);
@@ -72,6 +81,7 @@ public:
     virtual bool onLeftPressed(const std::pair<unsigned int, unsigned int> &windowCoordinates){return false;}
     virtual bool onLeftReleased(const std::pair<unsigned int, unsigned int> &windowCoordinates){return false;}
     virtual bool onMouseMoved(const std::pair<unsigned int, unsigned int> &windowCoordinates){return false;}
+    virtual void onResize();
 
     //----------------------------------------------------------------------------------------------------------------------
     //Draw, print & debug

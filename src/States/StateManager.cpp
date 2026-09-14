@@ -32,6 +32,10 @@ State& StateManager::topState()
     return *stateStack.back();
 }
 
+const std::vector<std::unique_ptr<State>>& StateManager::getStates() const {
+    return stateStack;
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 // State management
 //----------------------------------------------------------------------------------------------------------------------
@@ -181,6 +185,14 @@ bool StateManager::onMouseMoved(
 
     return false;
 }
+
+void StateManager::onResize() {
+    for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it) {
+        State& state = **it;
+        state.onResize();
+    }
+}
+
 //----------------------------------------------------------------------------------------------------------------------
 // Drawing
 //----------------------------------------------------------------------------------------------------------------------

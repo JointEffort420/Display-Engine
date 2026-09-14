@@ -9,6 +9,6 @@
 
 int main() {
     std::cout << "Game of Life initiated" << std::endl;
-    Space space = Space("Game of Life", {2.5, 1});
+    Space space = Space("Game of Life");
     space.start<MenuState>();
 }

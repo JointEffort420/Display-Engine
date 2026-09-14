@@ -12,9 +12,11 @@
 class Window {
 private:
     sf::RenderWindow window;
-    unsigned int width; unsigned int height;
+    sf::View pixelView;
+
     std::string title;
 
+    void updatePixelView();
 public:
     Window() = delete;
     explicit Window(unsigned int width, unsigned int height, const std::string& title);
@@ -24,7 +26,6 @@ public:
     std::pair<int,int> getDimensions();
     bool isOpen() const;
 
-    void open();
     void close();
 
     void handleEvents(Input& input, Camera& camera);//Window polls out of necessity, input parses/analyses

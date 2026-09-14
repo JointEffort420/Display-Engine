@@ -17,6 +17,7 @@ public:
     virtual bool onLeftPressed(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
     virtual bool onLeftReleased(const std::pair<unsigned int, unsigned int>& windowCoordinates) =0;
     virtual bool onMouseMoved(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
+    virtual void onResize() = 0;
 };
 
 #endif //DISPLAYENGINE_IINPUTOBSERVER_H

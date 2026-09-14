@@ -4,16 +4,16 @@
 class Window;
 class Camera;
 class StateManager;
-class ModelFactory;
-class ViewFactory;
+class Clock;
 
 struct EngineContext {
     Window& window;
     Camera& camera;
     StateManager& stateManager;
+    Clock& clock;
 
-    EngineContext(Window& win, Camera& cam, StateManager& sm)
-        : window(win), camera(cam), stateManager(sm) {}
+    EngineContext(Window& win, Camera& cam, StateManager& sm, Clock& ck)
+        : window(win), camera(cam), stateManager(sm), clock(ck) {}
 };
 
 #endif //DISPLAYENGINE_ENGINECONTEXT_H

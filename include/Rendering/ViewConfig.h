@@ -31,11 +31,11 @@ struct PolygonViewConfig {
     };
 
     bool fill = true;
-    bool edge = true;
+    bool edge = false;
     float edgeThickness = 2.f;
 
-    sf::Color fillColor = sf::Color::White;
-    sf::Color edgeColor = sf::Color(50, 50, 50);
+    sf::Color fillColor = sf::Color::Black;
+    sf::Color edgeColor = sf::Color::White;
 };
 
 inline const PolygonViewConfig defaultPolygonConfig = {};

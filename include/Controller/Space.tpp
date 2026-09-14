@@ -5,16 +5,14 @@
 
 #include "States/StateFactory.h"
 
+class Space;
+
 template<typename StateT, typename... Args>
 void Space::start(Args&&... args)
 {
-    window->open();
-
     pushState<StateT>(
         std::forward<Args>(args)...
     );
-
-    run();
 }
 
 template<typename StateT, typename... Args>

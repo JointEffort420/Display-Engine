@@ -32,7 +32,6 @@ add_library(DisplayEngine
 
         #   Core
         src/Core/EngineContext.cpp
-        src/Core/Tick.cpp
 
         #   Input
         src/Input/Input.cpp
@@ -68,6 +67,12 @@ add_library(DisplayEngine
         src/Window/Window.cpp
         include/Window/DesktopData.h
         src/Window/DesktopData.cpp
+        include/Time/Clock.h
+        src/Time/Clock.cpp
+        include/Time/Timer.h
+        src/Time/Timer.cpp
+        include/Time/TimerManager.h
+        src/Time/TimerManager.cpp
 )
 
 target_include_directories(DisplayEngine
@@ -91,6 +96,8 @@ target_link_options(DisplayEngine PUBLIC
 # ==================================================
 add_executable(DisplayEngineSandbox
         examples/Sandbox/main.cpp
+        examples/Sandbox/TestState.cpp
+        examples/Sandbox/TestState.h
 )
 
 target_link_libraries(DisplayEngineSandbox

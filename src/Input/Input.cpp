@@ -81,6 +81,10 @@ void Input::handleEvent(const sf::Event& event) {
 
         notifyMouseMoved(coordinates);
     }
+
+    else if (event.is<sf::Event::Resized>()) {
+        notifyResize();
+    }
 }
 
 // Observer Pattern Management
@@ -112,5 +116,12 @@ void Input::notifyMouseMoved(const std::pair<unsigned int, unsigned int>& coordi
     for (IInputObserver* observer : observers) {
         if (observer)
             observer->onMouseMoved(coordinates);
+    }
+}
+
+void Input::notifyResize() {
+    for (IInputObserver* observer : observers) {
+        if (observer)
+            observer->onResize();
     }
 }

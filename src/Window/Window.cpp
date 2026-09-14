@@ -6,8 +6,7 @@
 
 Window::Window(unsigned int width, unsigned int height, const std::string& title){
     window.create(sf::VideoMode({width, height}), title);
-    this->width = width;
-    this->height = height;
+    updatePixelView();
 }
 
 Window::~Window() = default;
@@ -17,44 +16,26 @@ Window* Window::get() {
     return this;
 }
 std::pair<int,int> Window::getDimensions() {
-    return std::make_pair(this->width,this->height);
+    return std::make_pair(window.getSize().x,window.getSize().y);
 }
 
 bool Window::isOpen() const {
     return window.isOpen();
 }
 
-void Window::open() {
-    if (!window.isOpen()) {
-        window.create(
-            sf::VideoMode({width, height}),
-            title
-        );
-    }
-}
-
 void Window::close() {
     this->window.close();
 }
 
-// Window.cpp
 void Window::handleEvents(Input& input, Camera& camera) {
     while (auto event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
             close();
         }
         else if (auto* resized = event->getIf<sf::Event::Resized>()) {
-            width  = resized->size.x;
-            height = resized->size.y;
-
-            // Keep SFML's own pixel mapping 1:1 with the new window size,
-            // otherwise SFML stretches on top of whatever Camera does.
-            window.setView(sf::View(sf::FloatRect({0.f, 0.f},
-                {static_cast<float>(width), static_cast<float>(height)})));
-
-            camera.setWindowDimensions({width, height});
+            updatePixelView();
+            camera.setWindowDimensions({resized->size.x, resized->size.y});   //recalculates uniformScale/offset
         }
-
         input.handleEvent(*event);
     }
 }
@@ -65,4 +46,19 @@ void Window::clear() {
 
 void Window::display() {
     window.display();
+}
+
+void Window::updatePixelView()
+{
+    pixelView.setSize({
+        static_cast<float>(window.getSize().x),
+        static_cast<float>(window.getSize().y)
+    });
+
+    pixelView.setCenter({
+        static_cast<float>(window.getSize().x) / 2.0f,
+        static_cast<float>(window.getSize().y) / 2.0f
+    });
+
+    window.setView(pixelView);
 }

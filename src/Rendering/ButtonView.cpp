@@ -128,6 +128,11 @@ void ButtonView::update() {
     }
 }
 
+void ButtonView::calibrate() {
+    CompositeView::calibrate();
+}
+
+
 
 //----------------------------------------------------------------------------------------------------------------------
 // View, Draw, Print & Debug

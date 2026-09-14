@@ -8,7 +8,7 @@
 #include <vector>
 #include <SFML/Window/Event.hpp>
 
-#include "../Core/IInputObserver.h"
+#include "IInputObserver.h"
 
 class Input {
 private:
@@ -38,6 +38,7 @@ public:
     void notifyLeftPressed(const std::pair<unsigned int, unsigned int>& coordinates);
     void notifyLeftReleased(const std::pair<unsigned int, unsigned int>& coordinates);
     void notifyMouseMoved(const std::pair<unsigned int, unsigned int>& coordinates);
+    void notifyResize();
 };
 
 

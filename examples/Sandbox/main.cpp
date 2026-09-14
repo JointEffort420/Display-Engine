@@ -6,9 +6,11 @@
 #include <ostream>
 
 #include <Controller/Space.h>
+#include "TestState.h"
 
 int main() {
     std::cout << "Sandbox initiated" << std::endl;
-    Space space = Space();
-    space.start();
+    Space space = Space("Testwindow");
+    space.start<TestState>();
+    space.run();
 }

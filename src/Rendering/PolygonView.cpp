@@ -88,8 +88,8 @@ std::pair<float, float> PolygonView::getRelativePoint(int index) const {
 // Logic
 //----------------------------------------------------------------------------------------------------------------------
 void PolygonView::calibrate() {
-    std::pair<unsigned int, unsigned int> windowPosition = getCamera().worldToWindowPosition(getModel().getPosition());
-    std::pair<unsigned int, unsigned int> windowSize = getCamera().worldToWindowSize(getModel().getSize());
+    std::pair<float, float> windowPosition = getCamera().worldToWindowPosition(getModel().getPosition());
+    std::pair<float, float> windowSize = getCamera().worldToWindowSize(getModel().getSize());
 
     polygon->setPointCount(relativePoints.size());
 
