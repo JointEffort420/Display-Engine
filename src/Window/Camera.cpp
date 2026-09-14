@@ -7,8 +7,8 @@
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-Camera::Camera(const std::pair<unsigned int, unsigned int>& windowDimensions):
-    windowDimensions(windowDimensions){
+Camera::Camera(const std::pair<float, float>& worldSize, const std::pair<unsigned int, unsigned int>& windowSize):
+    windowSize(windowSize), worldSize(worldSize) {
     calculateScale();
 }
 
@@ -16,11 +16,11 @@ Camera::Camera(const std::pair<unsigned int, unsigned int>& windowDimensions):
 //Setters
 //----------------------------------------------------------------------------------------------------------------------
 void Camera::setWindowDimensions(std::pair<unsigned int, unsigned int> dimensions) {
-    this->windowDimensions = dimensions;
+    this->windowSize = dimensions;
     calculateScale();
 }
 void Camera::setWorldDimensions(std::pair<float, float> dimensions) {
-    this->worldDimensions = dimensions;
+    this->worldSize = dimensions;
     calculateScale();
 }
 
@@ -30,27 +30,27 @@ void Camera::setWorldDimensions(std::pair<float, float> dimensions) {
 Camera* Camera::get(){return this;}
 
 std::pair<float, float> Camera::getWorldDimensions() const {
-    return worldDimensions;
+    return worldSize;
 }
 std::pair<unsigned int, unsigned int> Camera::getWindowDimensions() const {
-    return windowDimensions;
+    return windowSize;
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //Logic
 //----------------------------------------------------------------------------------------------------------------------
 void Camera::calculateScale() {
-    float scaleX = windowDimensions.first  / worldDimensions.first;
-    float scaleY = windowDimensions.second / worldDimensions.second;
+    float scaleX = windowSize.first  / worldSize.first;
+    float scaleY = windowSize.second / worldSize.second;
 
     uniformScale = std::min(scaleX, scaleY);   // <-- the actual fix: one shared scale, not two
 
-    float contentWidth  = worldDimensions.first  * uniformScale;
-    float contentHeight = worldDimensions.second * uniformScale;
+    float contentWidth  = worldSize.first  * uniformScale;
+    float contentHeight = worldSize.second * uniformScale;
 
     offset = {
-        (static_cast<float>(windowDimensions.first)  - contentWidth)  / 2.f,
-        (static_cast<float>(windowDimensions.second) - contentHeight) / 2.f
+        (static_cast<float>(windowSize.first)  - contentWidth)  / 2.f,
+        (static_cast<float>(windowSize.second) - contentHeight) / 2.f
     };
 }
 

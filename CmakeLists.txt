@@ -66,6 +66,8 @@ add_library(DisplayEngine
         #   Window
         src/Window/Camera.cpp
         src/Window/Window.cpp
+        include/Window/DesktopData.h
+        src/Window/DesktopData.cpp
 )
 
 target_include_directories(DisplayEngine
@@ -98,6 +100,8 @@ target_link_libraries(DisplayEngineSandbox
 
 add_executable(DisplayEngineGameOfLife
         examples/GameOfLife/main.cpp
+        examples/GameOfLife/MenuState.cpp
+        examples/GameOfLife/MenuState.h
 )
 
 target_link_libraries(DisplayEngineGameOfLife

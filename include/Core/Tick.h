@@ -7,7 +7,7 @@
 #include <ostream>
 #include <algorithm>
 
-#include "Logic/ITickObserver.h"
+#include "ITickObserver.h"
 
 class Tick {
 private:

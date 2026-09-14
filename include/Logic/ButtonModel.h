@@ -8,7 +8,7 @@
 #include <iostream>
 #include <ostream>
 
-#include "IInputObserver.h"
+#include "../Core/IInputObserver.h"
 #include "Model.h"
 
 

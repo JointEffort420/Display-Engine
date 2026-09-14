@@ -28,10 +28,10 @@ public:
 
     template<typename StateT, typename... Args>
     static std::unique_ptr<StateT> createState(EngineContext& ctx, Args&&... args) {
-        static_assert(std::is_base_of_v<State, StateT>,
-                      "StateT must derive from State");
-
-        return std::make_unique<StateT>(Key(), ctx, std::forward<Args>(args)...);
+        static_assert(std::is_base_of_v<State, StateT>, "StateT must derive from State");
+        auto state = std::make_unique<StateT>(Key(), ctx, std::forward<Args>(args)...);
+        state->onEnter();
+        return state;
     }
 };
 

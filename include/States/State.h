@@ -6,20 +6,22 @@
 #define DISPLAYENGINE_STATE_H
 
 #include "StateFactory.h"
-#include "Logic/IInputObserver.h"
-#include "Window/Camera.h"
+#include "../Core/IInputObserver.h"
 #include "Logic/ModelFactory.h"
 #include "Logic/Model.h"
+#include "Input/Input.h"
 
 class StateManager;
 
-class State : public IInputObserver{
+class State {
 private:
     EngineContext& ctx;
 
     std::vector<std::unique_ptr<Model>> models;
 
-    bool active = true;
+    bool listening;//Determines wether state should be subscriber to input
+    bool showing ;//Determines wether state is drawn
+    bool updating ;//Determines wether state is updating
 
 public:
     virtual ~State() = default;
@@ -28,19 +30,31 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     State() = delete;
-    explicit State(StateFactory::Key key, EngineContext& ctx);
+    explicit State(StateFactory::Key key, EngineContext& ctx, bool updating = true, bool listening = true, bool showing = true);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
     //----------------------------------------------------------------------------------------------------------------------
+    virtual void onEnter() = 0;
+    virtual void onExit() = 0;
+
     void activate();
     void deactivate();
+    void show();
+    void hide();
+    void attachInput();
+    void detachInput();
+
+    void addModel(std::unique_ptr<Model> model);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Getters
     //----------------------------------------------------------------------------------------------------------------------
-    EngineContext& getCtx();
+    [[nodiscard]] EngineContext& getCtx();
+    [[nodiscard]] const std::vector<std::unique_ptr<Model>>& getModels() const;
     [[nodiscard]] bool isActive()const;
+    [[nodiscard]] bool isShowing()const;
+    [[nodiscard]] bool isAttachedToInput()const;
 
     //----------------------------------------------------------------------------------------------------------------------
     //Logic
@@ -48,19 +62,23 @@ public:
     virtual void update();
     virtual void updateModels();
     virtual void updateViews();
-    virtual void nextState(std::unique_ptr<State> state);
+
+    template<typename StateT, typename... Args>
+    void stateTransition(Args&&... args);
 
     //----------------------------------------------------------------------------------------------------------------------
-    //Subscriptions
+    //Input (via StateManager)
     //----------------------------------------------------------------------------------------------------------------------
-    void onLeftPressed(const std::pair<unsigned int, unsigned int> &windowCoordinates) override {}
-    void onLeftReleased(const std::pair<unsigned int, unsigned int> &windowCoordinates) override {}
-    void onMouseMoved(const std::pair<unsigned int, unsigned int> &windowCoordinates) override{}
+    virtual bool onLeftPressed(const std::pair<unsigned int, unsigned int> &windowCoordinates){return false;}
+    virtual bool onLeftReleased(const std::pair<unsigned int, unsigned int> &windowCoordinates){return false;}
+    virtual bool onMouseMoved(const std::pair<unsigned int, unsigned int> &windowCoordinates){return false;}
 
     //----------------------------------------------------------------------------------------------------------------------
     //Draw, print & debug
     //----------------------------------------------------------------------------------------------------------------------
     virtual void draw();
 };
+
+#include "State.tpp"
 
 #endif //DISPLAYENGINE_STATE_H

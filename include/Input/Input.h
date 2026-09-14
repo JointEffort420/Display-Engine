@@ -8,7 +8,7 @@
 #include <vector>
 #include <SFML/Window/Event.hpp>
 
-#include "Logic/IInputObserver.h"
+#include "../Core/IInputObserver.h"
 
 class Input {
 private:

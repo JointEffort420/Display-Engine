@@ -9,18 +9,18 @@
 #include <algorithm>
 
 class Camera {
-    std::pair<unsigned int, unsigned int> windowDimensions;
-    std::pair<float, float> worldDimensions = std::make_pair(1,1);
+    std::pair<unsigned int, unsigned int> windowSize;
+    std::pair<float, float> worldSize;
 
-    float uniformScale = 1.0f;
-    std::pair<float, float> offset = std::make_pair(0.f, 0.f);
+    float uniformScale;
+    std::pair<float, float> offset;
 
 public:
     //----------------------------------------------------------------------------------------------------------------------
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     Camera() = delete;
-    Camera(const std::pair<unsigned int, unsigned int>& windowDimensions);
+    Camera(const std::pair<float, float>& worldSize, const std::pair<unsigned int, unsigned int>& windowSize);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters

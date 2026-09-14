@@ -11,5 +11,4 @@ int main() {
     std::cout << "Sandbox initiated" << std::endl;
     Space space = Space();
     space.start();
-    space.run();
 }
