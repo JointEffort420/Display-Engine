@@ -2,8 +2,8 @@
 // Created by natha on 9/9/2026.
 //
 
-#include "../include/PolygonView.h"
-#include "../../Logic/include/Model.h"
+#include "Rendering/PolygonView.h"
+#include "Logic/Model.h"
 
 #include <algorithm>
 #include <limits>
@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-PolygonView::PolygonView(Factory::Key key, const Model& model, Window& window, Camera& camera,
+PolygonView::PolygonView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
                          const PolygonViewConfig& config)
     : View(key, model, window, camera), relativePoints(config.relativePoints), edge(config.edge), fillColor(config.fillColor),edgeColor(config.edgeColor), edgeThickness(config.edgeThickness) {
     polygon = std::make_unique<sf::ConvexShape>();

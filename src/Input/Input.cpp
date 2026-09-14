@@ -2,7 +2,7 @@
 // Created by natha on 9/7/2026.
 //
 
-#include "Input.h"
+#include "Input/Input.h"
 
 #include <algorithm>
 #include <iostream>

@@ -2,8 +2,8 @@
 // Created by natha on 9/9/2026.
 //
 
-#ifndef GAMEOFLIFE_TEXTVIEW_H
-#define GAMEOFLIFE_TEXTVIEW_H
+#ifndef DISPLAYENGINE_TEXTVIEW_H
+#define DISPLAYENGINE_TEXTVIEW_H
 
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -29,7 +29,7 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     TextView() = delete;
-    TextView(Factory::Key key, const Model& model, Window& window, Camera& camera, const TextViewConfig& config);
+    TextView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera, const TextViewConfig& config);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
@@ -67,4 +67,4 @@ public:
     void draw() override;
 };
 
-#endif //GAMEOFLIFE_TEXTVIEW_H
+#endif //DISPLAYENGINE_TEXTVIEW_H

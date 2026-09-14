@@ -2,8 +2,8 @@
 // Created by natha on 9/4/2026.
 //
 
-#ifndef GAMEOFLIFE_BUTTON_H
-#define GAMEOFLIFE_BUTTON_H
+#ifndef DISPLAYENGINE_BUTTON_H
+#define DISPLAYENGINE_BUTTON_H
 
 #include <iostream>
 #include <ostream>
@@ -26,7 +26,7 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     ButtonModel() = delete;
-    ButtonModel(Factory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor = Anchor::Center);
+    ButtonModel(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor = Anchor::Center);
     ~ButtonModel() = default;
 
     //----------------------------------------------------------------------------------------------------------------------

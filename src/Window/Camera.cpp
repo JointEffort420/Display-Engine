@@ -2,9 +2,7 @@
 // Created by natha on 9/4/2026.
 //
 
-#include "../include/Camera.h"
-
-#include <algorithm>
+#include "Window/Camera.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor

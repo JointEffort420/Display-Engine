@@ -2,15 +2,15 @@
 // Created by natha on 9/9/2026.
 //
 
-#include "../include/TextView.h"
-#include "../../Logic/include/Model.h"
+#include "Rendering/TextView.h"
+#include "Logic/Model.h"
 
 #include <algorithm>
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-TextView::TextView(Factory::Key key, const Model& model, Window& window, Camera& camera,
+TextView::TextView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
                    const TextViewConfig& config)
     : View(key, model, window, camera),
     string(config.string),

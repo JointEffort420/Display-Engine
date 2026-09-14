@@ -2,13 +2,13 @@
 // Created by natha on 9/9/2026.
 //
 
-#include "../include/EllipseView.h"
-#include "../../Logic/include/Model.h"
+#include "Rendering/EllipseView.h"
+#include "Logic/Model.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-EllipseView::EllipseView(Factory::Key key, const Model& model, Window& window, Camera& camera,
+EllipseView::EllipseView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
                          const EllipseViewConfig& config)
     : View(key, model, window, camera),
     fill(config.fill),

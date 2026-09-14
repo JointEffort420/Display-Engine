@@ -2,8 +2,8 @@
 // Created by natha on 9/9/2026.
 //
 
-#ifndef GAMEOFLIFE_POLYGONVIEW_H
-#define GAMEOFLIFE_POLYGONVIEW_H
+#ifndef DISPLAYENGINE_POLYGONVIEW_H
+#define DISPLAYENGINE_POLYGONVIEW_H
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -29,7 +29,7 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     PolygonView() = delete;
-    PolygonView(Factory::Key key, const Model& model, Window& window, Camera& camera, const PolygonViewConfig& config);
+    PolygonView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera, const PolygonViewConfig& config);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
@@ -69,4 +69,4 @@ public:
     void draw() override;
 };
 
-#endif //GAMEOFLIFE_POLYGONVIEW_H
+#endif //DISPLAYENGINE_POLYGONVIEW_H

@@ -2,8 +2,8 @@
 // Created by natha on 9/4/2026.
 //
 
-#ifndef GAMEOFLIFE_IINPUTOBSERVER_H
-#define GAMEOFLIFE_IINPUTOBSERVER_H
+#ifndef DISPLAYENGINE_IINPUTOBSERVER_H
+#define DISPLAYENGINE_IINPUTOBSERVER_H
 
 #include <utility>
 
@@ -19,4 +19,4 @@ public:
     virtual void onMouseMoved(const std::pair<unsigned int, unsigned int>& windowCoordinates) = 0;
 };
 
-#endif //GAMEOFLIFE_IINPUTOBSERVER_H
+#endif //DISPLAYENGINE_IINPUTOBSERVER_H

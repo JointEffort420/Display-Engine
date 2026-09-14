@@ -2,8 +2,8 @@
 // Created by natha on 9/9/2026.
 //
 
-#ifndef GAMEOFLIFE_ELLIPSEVIEW_H
-#define GAMEOFLIFE_ELLIPSEVIEW_H
+#ifndef DISPLAYENGINE_ELLIPSEVIEW_H
+#define DISPLAYENGINE_ELLIPSEVIEW_H
 
 #include <SFML/Graphics.hpp>
 
@@ -24,8 +24,8 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     EllipseView() = delete;
-    EllipseView(Factory::Key key, const Model& model, Window& window, Camera& camera);
-    EllipseView(Factory::Key key, const Model& model, Window& window, Camera& camera,
+    EllipseView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera);
+    EllipseView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
                 const EllipseViewConfig& config);
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -65,4 +65,4 @@ public:
     void draw() override;
 };
 
-#endif //GAMEOFLIFE_ELLIPSEVIEW_H
+#endif //DISPLAYENGINE_ELLIPSEVIEW_H

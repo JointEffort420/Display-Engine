@@ -2,13 +2,13 @@
 // Created by natha on 9/4/2026.
 //
 
-#ifndef GAMEOFLIFE_VIEW_H
-#define GAMEOFLIFE_VIEW_H
+#ifndef DISPLAYENGINE_VIEW_H
+#define DISPLAYENGINE_VIEW_H
 #include <SFML/Window/Window.hpp>
 
-#include "Camera.h"
-#include "Window.h"
-#include "../../Logic/include/Factory.h"
+#include "Window/Camera.h"
+#include "Window/Window.h"
+#include "Rendering/ViewFactory.h"
 
 class Model;
 
@@ -30,7 +30,7 @@ public:
     //----------------------------------------------------------------------------------------------------------------------
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
-    View(Factory::Key key, const Model& model, Window& window, Camera& camera);
+    View(ViewFactory::Key key, const Model& model, Window& window, Camera& camera);
     virtual ~View() = default;
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -57,4 +57,4 @@ public:
     //----------------------------------------------------------------------------------------------------------------------
     virtual void draw() = 0;
 };
-#endif //GAMEOFLIFE_VIEW_H
+#endif //DISPLAYENGINE_VIEW_H

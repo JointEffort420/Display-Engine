@@ -2,8 +2,8 @@
 // Created by natha on 9/9/2026.
 //
 
-#ifndef GAMEOFLIFE_COMPOSITEVIEW_H
-#define GAMEOFLIFE_COMPOSITEVIEW_H
+#ifndef DISPLAYENGINE_COMPOSITEVIEW_H
+#define DISPLAYENGINE_COMPOSITEVIEW_H
 
 #include <memory>
 #include <vector>
@@ -24,7 +24,7 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     CompositeView() = delete;
-    CompositeView(Factory::Key key, const Model& model, Window& window, Camera& camera);
+    CompositeView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
@@ -64,4 +64,4 @@ public:
     void draw() override;
 };
 
-#endif //GAMEOFLIFE_COMPOSITEVIEW_H
+#endif //DISPLAYENGINE_COMPOSITEVIEW_H

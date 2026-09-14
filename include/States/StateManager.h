@@ -2,17 +2,18 @@
 // Created by natha on 9/7/2026.
 //
 
-#ifndef GAMEOFLIFE_STATEMANAGER_H
-#define GAMEOFLIFE_STATEMANAGER_H
+#ifndef DISPLAYENGINE_STATEMANAGER_H
+#define DISPLAYENGINE_STATEMANAGER_H
+
 #include <memory>
 #include <stack>
+#include <iostream>
+#include <ostream>
 
-#include "../../Logic/include/Factory.h"
+#include "Logic/ModelFactory.h"
 #include "State.h"
-#include "../../Utils/StateType.h"
-#include "../../Utils/EngineContext.h"
-
-#include "../../Utils/Input.h"
+#include "Core/EngineContext.h"
+#include "Input/Input.h"
 
 class StateManager {
 private:
@@ -40,7 +41,7 @@ public:
     void update();
     void popState();
     State& topState();
-    void pushState(StateType stateType);
+    void pushState(std::unique_ptr<State> state);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Draw, print & debug
@@ -48,4 +49,4 @@ public:
     void draw();
 };
 
-#endif //GAMEOFLIFE_STATEMANAGER_H
+#endif //DISPLAYENGINE_STATEMANAGER_H

@@ -2,15 +2,15 @@
 // Created by natha on 9/9/2026.
 //
 
-#include "../include/SpriteView.h"
-#include "../../Logic/include/Model.h"
+#include "Rendering/SpriteView.h"
+#include "Logic/Model.h"
 
 #include <algorithm>
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-SpriteView::SpriteView(Factory::Key key, const Model& model, Window& window, Camera& camera,
+SpriteView::SpriteView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
                        const SpriteViewConfig& config)
     : View(key, model, window, camera),
     origin(sf::Vector2f(config.origin.first, config.origin.second)),
@@ -79,6 +79,10 @@ sf::IntRect SpriteView::getTextureRect() const {return textureRect;}
 //----------------------------------------------------------------------------------------------------------------------
 
 void SpriteView::calibrate() {
+    if (!sprite) {
+        return;
+    }
+
     const auto [x, y] = getCamera().worldToWindowPosition(getModel().getPosition());
     const auto [width, height] = getCamera().worldToWindowSize(getModel().getSize());
 
@@ -115,6 +119,9 @@ void SpriteView::calibrate() {
 
 void SpriteView::draw() {
     if (!isVisible()) {
+        return;
+    }
+    if (!sprite) {
         return;
     }
 

@@ -2,7 +2,7 @@
 // Created by natha on 9/1/2026.
 //
 
-#include "Tick.h"
+#include "Core/Tick.h"
 
 Tick* Tick::singletonInstance = nullptr; //The global variable tick
 

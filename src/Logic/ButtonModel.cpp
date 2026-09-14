@@ -2,13 +2,13 @@
 // Created by natha on 9/4/2026.
 //
 
-#include "../include/ButtonModel.h"
-#include "../../Representation/include/ButtonView.h"
+#include "Logic/ButtonModel.h"
+#include "Rendering/ButtonView.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-ButtonModel::ButtonModel(Factory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor): Model(key, position, size, anchor) {}
+ButtonModel::ButtonModel(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor): Model(key, position, size, anchor) {}
 
 //----------------------------------------------------------------------------------------------------------------------
 //Setters

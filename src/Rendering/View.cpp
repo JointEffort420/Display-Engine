@@ -2,13 +2,12 @@
 // Created by natha on 9/4/2026.
 //
 
-#include "../include/View.h"
-#include "../../Logic/include/Model.h"
+#include "Rendering/View.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-View::View(Factory::Key key, const Model& model, Window& window, Camera& camera): model(model), window(window), camera(camera) {}
+View::View(ViewFactory::Key key, const Model& model, Window& window, Camera& camera): model(model), window(window), camera(camera) {}
 
 //----------------------------------------------------------------------------------------------------------------------
 //Setters

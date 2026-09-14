@@ -2,8 +2,8 @@
 // Created by natha on 9/9/2026.
 //
 
-#ifndef GAMEOFLIFE_SPRITEVIEW_H
-#define GAMEOFLIFE_SPRITEVIEW_H
+#ifndef DISPLAYENGINE_SPRITEVIEW_H
+#define DISPLAYENGINE_SPRITEVIEW_H
 
 #include <SFML/Graphics.hpp>
 
@@ -27,7 +27,7 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     SpriteView() = delete;
-    SpriteView(Factory::Key key, const Model& model, Window& window, Camera& camera,
+    SpriteView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
                const SpriteViewConfig& config);
 
     //----------------------------------------------------------------------------------------------------------------------

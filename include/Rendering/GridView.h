@@ -3,21 +3,19 @@
 // Created by natha on 9/3/2026.
 //
 
-#ifndef GAMEOFLIFE_GRIDVIEW_H
-#define GAMEOFLIFE_GRIDVIEW_H
+#ifndef DISPLAYENGINE_GRIDVIEW_H
+#define DISPLAYENGINE_GRIDVIEW_H
 
 #include <SFML/Graphics.hpp>
 
-#include "Camera.h"
-#include "Window.h"
 #include "View.h"
 
-class VirtualGridModel;
+class GridModel;
 
 // This view will read the Grid model and draw it via the window. Never mutates the model!
 class  GridView : public View {
 private:
-    const VirtualGridModel& grid;
+    const GridModel& grid;
     float lineWidth;
     sf::Color aliveColor = sf::Color::Red;
     sf::Color deadColor = sf::Color::Black;
@@ -28,7 +26,7 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     GridView() = delete;
-    GridView(Factory::Key key, const VirtualGridModel& grid, Window& window, Camera& camera, const GridViewConfig& config);
+    GridView(ViewFactory::Key key, const GridModel& grid, Window& window, Camera& camera, const GridViewConfig& config);
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
@@ -49,4 +47,4 @@ public:
     void draw() override;
 };
 
-#endif //GAMEOFLIFE_GRIDVIEW_H
+#endif //DISPLAYENGINE_GRIDVIEW_H

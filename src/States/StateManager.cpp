@@ -2,10 +2,7 @@
 // Created by natha on 9/7/2026.
 //
 
-#include "../include/StateManager.h"
-
-#include <iostream>
-#include <ostream>
+#include "States/StateManager.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor
@@ -40,20 +37,15 @@ State &StateManager::topState() {
     std::cout << "Requesting top state of empty stack in stateManager" << std::endl;
 }
 
-void StateManager::pushState(StateType stateType) {
-    if (!ctx) {
-        std::cerr << "stateManager::pushState(StateType " << stateType << ") before ctx was injected" << std::endl;
-        return;
-    }
-
-    if (!stateStack.empty()) {topState().deactivate();}
-    std::unique_ptr<State> newState = ctx->factory.createState(*ctx, stateType);
-    if (newState) {
-        stateStack.push(std::move(newState));
-    }
+void StateManager::pushState(std::unique_ptr<State> state) {
+    if (!stateStack.empty()) { topState().deactivate(); }
+    stateStack.push(std::move(state));   // <- use what was passed in
+    stateStack.top()->activate();
 }
 
 //----------------------------------------------------------------------------------------------------------------------
 //Draw, print & debug
 //----------------------------------------------------------------------------------------------------------------------
-void draw();
+void StateManager::draw() {
+    topState().draw();
+}

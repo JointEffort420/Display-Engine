@@ -2,7 +2,7 @@
 // Created by natha on 9/9/2026.
 //
 
-#include "../include/CompositeView.h"
+#include "Rendering/CompositeView.h"
 
 #include <algorithm>
 
@@ -10,7 +10,7 @@
 //Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
 
-CompositeView::CompositeView(Factory::Key key, const Model& model, Window& window, Camera& camera)
+CompositeView::CompositeView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera)
     : View(key, model, window, camera) {}
 
 //----------------------------------------------------------------------------------------------------------------------

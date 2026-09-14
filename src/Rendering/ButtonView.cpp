@@ -2,20 +2,18 @@
 // Created by natha on 9/6/2026.
 //
 
-#include "../include/ButtonView.h"
-
-#include "../../Logic/include/ButtonModel.h"
-
-#include "../include/PolygonView.h"
-#include "../include/SpriteView.h"
-#include "../include/TextView.h"
+#include "Rendering/ButtonView.h"
+#include "Rendering/PolygonView.h"
+#include "Rendering/SpriteView.h"
+#include "Rendering/TextView.h"
+#include "Logic/ButtonModel.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 // Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
 
 ButtonView::ButtonView(
-    Factory::Key key,
+    ViewFactory::Key key,
     const ButtonModel& model,
     Window& window,
     Camera& camera,

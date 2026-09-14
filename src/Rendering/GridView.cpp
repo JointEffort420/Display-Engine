@@ -2,13 +2,13 @@
 // Created by natha on 9/3/2026.
 //
 
-#include "../include/GridView.h"
-#include "../../Logic/include/VirtualGridModel.h"
+#include "Rendering/GridView.h"
+#include "Logic/GridModel.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-GridView::GridView(Factory::Key key, const VirtualGridModel &grid, Window& window, Camera& camera, const GridViewConfig& config):
+GridView::GridView(ViewFactory::Key key, const GridModel &grid, Window& window, Camera& camera, const GridViewConfig& config):
     View(key, grid, window, camera),
     grid(grid),
     lineWidth(config.lineWidth),

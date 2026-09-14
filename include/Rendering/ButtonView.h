@@ -2,14 +2,16 @@
 // Created by natha on 9/6/2026.
 //
 
-#ifndef GAMEOFLIFE_BUTTONVIEW_H
-#define GAMEOFLIFE_BUTTONVIEW_H
+#ifndef DISPLAYENGINE_BUTTONVIEW_H
+#define DISPLAYENGINE_BUTTONVIEW_H
 
 #include <SFML/Graphics.hpp>
 
-#include "Camera.h"
+#include "Window/Camera.h"
+#include "Window/Window.h"
+
 #include "CompositeView.h"
-#include "Window.h"
+#include "Logic/ModelFactory.h"
 
 class ButtonModel;
 class PolygonView;
@@ -35,7 +37,7 @@ public:
     ButtonView() = delete;
 
     ButtonView(
-        Factory::Key key,
+        ViewFactory::Key key,
         const ButtonModel& model,
         Window& window,
         Camera& camera,
@@ -81,4 +83,4 @@ public:
     void draw() override;
 };
 
-#endif //GAMEOFLIFE_BUTTONVIEW_H
+#endif //DISPLAYENGINE_BUTTONVIEW_H

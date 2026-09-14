@@ -1,9 +1,5 @@
-//
-// Created by natha on 9/1/2026.
-//
-
-#ifndef GAMEOFLIFE_TICK_H
-#define GAMEOFLIFE_TICK_H
+#ifndef DISPLAYENGINE_TICK_H
+#define DISPLAYENGINE_TICK_H
 
 #include <chrono>
 #include <vector>
@@ -11,10 +7,7 @@
 #include <ostream>
 #include <algorithm>
 
-#include "../Logic/include/ITickObserver.h"
-
-//Note: This singleton pattern is unnecessarily convoluted. A singleton isn't even needed in this case, since Game could just pass it on.
-//However in the spirit of learning we'll roll with this
+#include "Logic/ITickObserver.h"
 
 class Tick {
 private:
@@ -60,4 +53,4 @@ public:
     void notifyObservers();
 };
 
-#endif //GAMEOFLIFE_TICK_H
+#endif //DISPLAYENGINE_TICK_H

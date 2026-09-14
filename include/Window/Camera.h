@@ -2,10 +2,11 @@
 // Created by natha on 9/4/2026.
 //
 
-#ifndef GAMEOFLIFE_CAMERA_H
-#define GAMEOFLIFE_CAMERA_H
+#ifndef DISPLAYENGINE_CAMERA_H
+#define DISPLAYENGINE_CAMERA_H
 
 #include <utility>
+#include <algorithm>
 
 class Camera {
     std::pair<unsigned int, unsigned int> windowDimensions;
@@ -55,4 +56,4 @@ public:
     //----------------------------------------------------------------------------------------------------------------------
 };
 
-#endif //GAMEOFLIFE_CAMERA_H
+#endif //DISPLAYENGINE_CAMERA_H

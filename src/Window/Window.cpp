@@ -2,7 +2,7 @@
 // Created by natha on 9/1/2026.
 //
 
-#include "../include/Window.h"
+#include "Window/Window.h"
 
 Window::Window(unsigned int width, unsigned int height, const std::string& title){
     window.create(sf::VideoMode({width, height}), title);

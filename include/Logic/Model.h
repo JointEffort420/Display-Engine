@@ -2,13 +2,14 @@
 // Created by natha on 9/4/2026.
 //
 
-#ifndef GAMEOFLIFE_MODEL_H
-#define GAMEOFLIFE_MODEL_H
+#ifndef DISPLAYENGINE_MODEL_H
+#define DISPLAYENGINE_MODEL_H
+
 #include <memory>
 #include <utility>
 
-#include "Factory.h"
-#include "../../Utils/Anchor.h"
+#include "ModelFactory.h"
+#include "Utils/Anchor.h"
 
 class View;
 class Factory;
@@ -25,13 +26,13 @@ public:
     //Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
     Model() = delete;
-    Model(Factory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor = Anchor::Center);
+    Model(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor = Anchor::Center);
     virtual ~Model();
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
     //----------------------------------------------------------------------------------------------------------------------
-    void setView(Factory::Key key, std::unique_ptr<View> newView);
+    void setView(ModelFactory::Key key, std::unique_ptr<View> newView);
     void setPosition(const std::pair<float, float>& position);
     void setSize(const std::pair<float, float>& size);
 
@@ -45,8 +46,9 @@ public:
     [[nodiscard]] bool isAt(const std::pair<float, float>& worldCoordinates) const;
 
     //----------------------------------------------------------------------------------------------------------------------
-    //Subscribtions
+    //Logic
     //----------------------------------------------------------------------------------------------------------------------
+    virtual void update(){}
 
     //----------------------------------------------------------------------------------------------------------------------
     //View, Draw, Print & Debug
@@ -54,4 +56,4 @@ public:
     virtual void updateView();
     void drawView();
 };
-#endif //GAMEOFLIFE_MODEL_H
+#endif //DISPLAYENGINE_MODEL_H

@@ -1,18 +1,17 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef DISPLAYENGINE_WINDOW_H
+#define DISPLAYENGINE_WINDOW_H
 
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <utility>
 #include <iostream>
 
-#include "../../Utils/Input.h"
-#include "../include/Camera.h"
+#include "Input/Input.h"
+#include "Window/Camera.h"
 
 class Window {
 private:
     sf::RenderWindow window;
-
     unsigned int width; unsigned int height;
     std::string title;
 
@@ -40,4 +39,4 @@ public:
 
 };
 
-#endif // WINDOW_H
+#endif // DISPLAYENGINE_WINDOW_H

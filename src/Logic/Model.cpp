@@ -2,13 +2,13 @@
 // Created by natha on 9/4/2026.
 //
 
-#include "../include/Model.h"
-#include "../../Representation/include/View.h"
+#include "Logic/Model.h"
+#include "Rendering/View.h"
 
 //----------------------------------------------------------------------------------------------------------------------
 //Constructors & Destructor
 //----------------------------------------------------------------------------------------------------------------------
-Model::Model(Factory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor): position(position), size(size) {
+Model::Model(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, Anchor anchor): position(position), size(size) {
     if (anchor == Anchor::Center) {
         std::pair<float, float> newPosition = position;
         newPosition.first -= getSize().first/2.0f;
@@ -32,7 +32,7 @@ Model::~Model() = default;
 //----------------------------------------------------------------------------------------------------------------------
 //Setters
 //----------------------------------------------------------------------------------------------------------------------
-void Model::setView(Factory::Key key, std::unique_ptr<View> newView) {
+void Model::setView(ModelFactory::Key key, std::unique_ptr<View> newView) {
     view = std::move(newView);
 }
 void Model::setPosition(const std::pair<float, float>& ps) {
@@ -66,9 +66,9 @@ void Model::setSize(const std::pair<float, float>& size) {
 //View, Draw, Print & Debug
 //----------------------------------------------------------------------------------------------------------------------
 void Model::updateView() {
-    this->view->update();
+    view->update();
 }
 
 void Model::drawView() {
-    this->view->draw();
+    view->draw();
 }

@@ -1,49 +1,115 @@
 cmake_minimum_required(VERSION 3.28)
-project(Display-Engine LANGUAGES CXX)
+
+project(DisplayEngine LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(SFML_DIR "C:/SFML/lib/cmake/SFML")
+# --------------------------------------------------
+# Dependencies
+# --------------------------------------------------
 
-find_package(SFML 3 COMPONENTS Graphics Window System REQUIRED)
+include(FetchContent)
 
-add_executable(Display-Engine
-        main.cpp
-
-        //Includes
-        //    Controller
-        //    Core
-        //    Factories
-        //    Input
-        //    Logic
-        //    Rendering
-        //    Resources
-        //    States
-        //    Utils
-        //    Window
-
-        //Src
-        //    Controller
-        //    Core
-        //    Factories
-        //    Input
-        //    Logic
-        //    Rendering
-        //    Resources
-        //    States
-        //    Utils
-        //    Window
+FetchContent_Declare(
+        SFML
+        GIT_REPOSITORY https://github.com/SFML/SFML.git
+        GIT_TAG 3.1.0
+        GIT_SHALLOW ON
+        EXCLUDE_FROM_ALL
+        SYSTEM
 )
 
-target_link_libraries(Display-Engine PRIVATE
+FetchContent_MakeAvailable(SFML)
+
+# --------------------------------------------------
+# DisplayEngine library
+# --------------------------------------------------
+add_library(DisplayEngine
+        #   Controller
+        src/Controller/Space.cpp
+
+        #   Core
+        src/Core/EngineContext.cpp
+        src/Core/Tick.cpp
+
+        #   Input
+        src/Input/Input.cpp
+
+        #   Logic
+        src/Logic/ButtonModel.cpp
+        src/Logic/GridModel.cpp
+        src/Logic/Model.cpp
+        src/Logic/ModelFactory.cpp
+
+        #   Rendering
+        src/Rendering/ButtonView.cpp
+        src/Rendering/CompositeView.cpp
+        src/Rendering/EllipseView.cpp
+        src/Rendering/GridView.cpp
+        src/Rendering/PolygonView.cpp
+        src/Rendering/SpriteView.cpp
+        src/Rendering/TextView.cpp
+        src/Rendering/View.cpp
+        src/Rendering/ViewFactory.cpp
+
+        #   Resources
+        src/Resources/FontManager.cpp
+        src/Resources/TextureManager.cpp
+
+        #   States
+        src/States/StateFactory.cpp
+        src/States/State.cpp
+        src/States/StateManager.cpp
+
+        #   Window
+        src/Window/Camera.cpp
+        src/Window/Window.cpp
+)
+
+target_include_directories(DisplayEngine
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_link_libraries(DisplayEngine PUBLIC
         SFML::Graphics
         SFML::Window
         SFML::System
+        "$<LINK_GROUP:RESCAN,freetype,harfbuzz>"
+)
+target_link_options(DisplayEngine PUBLIC
+        "$<$<CXX_COMPILER_ID:GNU>:LINKER:--start-group>"
+        "$<$<CXX_COMPILER_ID:GNU>:LINKER:--end-group>"
 )
 
-add_custom_command(TARGET Display-Engine POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "C:/SFML/bin"
-        "$<TARGET_FILE_DIR:Display-Engine>"
+# ==================================================
+# Example
+# ==================================================
+add_executable(DisplayEngineSandbox
+        examples/Sandbox/main.cpp
+)
+
+target_link_libraries(DisplayEngineSandbox
+        PRIVATE
+        DisplayEngine
+)
+
+add_executable(DisplayEngineGameOfLife
+        examples/GameOfLife/main.cpp
+)
+
+target_link_libraries(DisplayEngineGameOfLife
+        PRIVATE
+        DisplayEngine
+)
+
+add_executable(DisplayEngineFallingSandSim
+        examples/FallingSandSim/main.cpp
+)
+
+target_link_libraries(DisplayEngineFallingSandSim
+        PRIVATE
+        DisplayEngine
 )

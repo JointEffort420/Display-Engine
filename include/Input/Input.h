@@ -2,13 +2,13 @@
 // Created by natha on 9/7/2026.
 //
 
-#ifndef GAMEOFLIFE_INPUT_H
-#define GAMEOFLIFE_INPUT_H
+#ifndef DISPLAYENGINE_INPUT_H
+#define DISPLAYENGINE_INPUT_H
 
 #include <vector>
 #include <SFML/Window/Event.hpp>
 
-#include "../Logic/include/IInputObserver.h"
+#include "Logic/IInputObserver.h"
 
 class Input {
 private:
@@ -41,4 +41,4 @@ public:
 };
 
 
-#endif //GAMEOFLIFE_INPUT_H
+#endif //DISPLAYENGINE_INPUT_H
