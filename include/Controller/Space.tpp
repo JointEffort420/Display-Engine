@@ -20,7 +20,7 @@ namespace eng {
     void Space::pushState(Args&&... args)
     {
         stateManager->pushState(
-            SceneFactory::createState<SceneT>(
+            SceneFactory::createScene<SceneT>(
                 *ctx,
                 std::forward<Args>(args)...
             )

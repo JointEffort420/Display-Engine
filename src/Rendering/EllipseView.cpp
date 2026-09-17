@@ -96,7 +96,7 @@ namespace eng {
     // View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
 
-    void EllipseView::draw() {
+    void EllipseView::draw() const {
         if (!isVisible()) {
             return;
         }

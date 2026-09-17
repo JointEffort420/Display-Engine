@@ -138,7 +138,7 @@ namespace eng {
     // View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
 
-    void ButtonView::draw() {
+    void ButtonView::draw() const {
         if (!isVisible()) {
             return;
         }

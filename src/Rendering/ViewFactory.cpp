@@ -65,9 +65,10 @@ namespace eng {
                         return nullptr;
                     }
 
-                    return std::make_unique<GridView>(
+                    std::unique_ptr<GridView> view = std::make_unique<GridView>(
                         Key(), *grid, ctx.window, ctx.camera, viewConfig
                     );
+                    return std::move(view);
                 }
 
                 //------------------------------------------------------------------------------------------------

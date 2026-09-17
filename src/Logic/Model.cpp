@@ -38,10 +38,12 @@ namespace eng {
     }
     void Model::setPosition(const std::pair<float, float>& ps) {
         this->position = ps;
+        calibrateView();
     }
 
     void Model::setSize(const std::pair<float, float>& size) {
         this->size = size;
+        calibrateView();
     }
 
     //----------------------------------------------------------------------------------------------------------------------
@@ -67,14 +69,17 @@ namespace eng {
     //View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
     void Model::calibrateView() {
+        if (!view){return;}
         view->calibrate();
     }
 
     void Model::updateView() {
+        if (!view){return;}
         view->update();
     }
 
     void Model::drawView() {
+        if (!view){return;}
         view->draw();
     }
 }

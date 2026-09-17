@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "Logic/Model.h"
+#include <Logic/GridModel.h>
 #include "Logic/ButtonModel.h"
 #include "Logic/ModelFactory.h"
 #include "Rendering/View.h"
@@ -17,34 +18,54 @@ namespace eng {
         const ViewConfig& config,
         Anchor anchor
     ) {
-        auto model = std::make_unique<Model>(Key(), position, size, anchor);
+        return std::visit(
+    [&](const auto& viewConfig) -> std::unique_ptr<Model> {
+            using T = std::decay_t<decltype(viewConfig)>;
 
-        auto view = ViewFactory::createView(ctx, *model, config);
-        if (!view) {
-            std::cerr << "ModelFactory::createModel(): failed to create View.\n";
-            return nullptr;
-        }
+            //------------------------------------------------------------------------------------------------
+            // Button
+            //------------------------------------------------------------------------------------------------
+            if constexpr (std::is_same_v<T, ButtonViewConfig>) {
+                auto model = std::make_unique<ButtonModel>(Key(), position, size, anchor);
 
-        model->setView(Key(), std::move(view));
-        return model;
-    }
+                auto view = ViewFactory::createView(ctx, *model, config);
+                if (!view) {
+                    std::cerr << "ModelFactory::createButton(): failed to create ButtonView.\n";
+                    return nullptr;
+                }
 
-    std::unique_ptr<ButtonModel> ModelFactory::createButton(
-        EngineContext& ctx,
-        const std::pair<float, float>& position,
-        const std::pair<float, float>& size,
-        const ButtonViewConfig& config,
-        Anchor anchor
-    ) {
-        auto model = std::make_unique<ButtonModel>(Key(), position, size, anchor);
+                model->setView(Key(), std::move(view));
+                return model;
+            }
+            //------------------------------------------------------------------------------------------------
+            // Grid
+            //------------------------------------------------------------------------------------------------
+            else if constexpr (std::is_same_v<T, GridViewConfig>) {
+                auto model = std::make_unique<GridModel>(
+                    Key(), position, size, viewConfig.gridDimensions, anchor
+                );
 
-        auto view = ViewFactory::createView(ctx, *model, config);
-        if (!view) {
-            std::cerr << "ModelFactory::createButton(): failed to create ButtonView.\n";
-            return nullptr;
-        }
+                auto view = ViewFactory::createView(ctx, *model, config);
+                if (!view) return nullptr;
 
-        model->setView(Key(), std::move(view));
-        return model;
+                model->setView(Key(), std::move(view));
+                return model;
+            }
+            //------------------------------------------------------------------------------------------------
+            // Basic model
+            //------------------------------------------------------------------------------------------------
+            else {
+                auto model = std::make_unique<Model>(Key(),  position, size, anchor);
+
+                auto view = ViewFactory::createView(ctx, *model, config);
+                if (!view) {
+                    std::cerr << "ModelFactory::createModel(): failed to create View.\n";
+                    return nullptr;
+                }
+
+                model->setView(Key(), std::move(view));
+                return model;
+            }
+        }, config);
     }
 }

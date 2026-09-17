@@ -16,8 +16,6 @@ namespace eng {
 
     class ViewFactory {
     public:
-        ViewFactory() = default;
-
         friend class ModelFactory;
 
         class Key {

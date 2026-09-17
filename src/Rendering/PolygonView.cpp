@@ -109,7 +109,7 @@ namespace eng {
     // View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
 
-    void PolygonView::draw() {
+    void PolygonView::draw() const {
         if (!isVisible()) {
             return;
         }

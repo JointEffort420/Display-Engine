@@ -71,6 +71,10 @@ add_library(DisplayEngine
         src/Time/Clock.cpp
         src/Time/Timer.cpp
         src/Time/TimerManager.cpp
+        include/Logic/CellModel.h
+        src/Logic/CellModel.cpp
+        include/Rendering/CellView.h
+        src/Rendering/CellView.cpp
 )
 
 target_include_directories(DisplayEngine
@@ -107,6 +111,8 @@ add_executable(DisplayEngineGameOfLife
         examples/GameOfLife/main.cpp
         examples/GameOfLife/MenuScene.cpp
         examples/GameOfLife/MenuScene.h
+        examples/GameOfLife/GridScene.cpp
+        examples/GameOfLife/GridScene.h
 )
 
 target_link_libraries(DisplayEngineGameOfLife

@@ -118,7 +118,7 @@ namespace eng {
     // View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
 
-    void SpriteView::draw() {
+    void SpriteView::draw() const {
         if (!isVisible()) {
             return;
         }

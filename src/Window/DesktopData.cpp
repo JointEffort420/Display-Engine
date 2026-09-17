@@ -29,7 +29,7 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     std::pair<float, float> getDefaultWorldSize() {
         // Standard Engine Convention: Lock height to 1.0f and scale width by desktop aspect ratio
-        return {getDesktopRatio(), 1.0f};
+        return {getDesktopRatio() * 100, 100* 1.0f};
     }
 
     //----------------------------------------------------------------------------------------------------------------------

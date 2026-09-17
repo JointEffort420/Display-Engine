@@ -18,7 +18,7 @@ namespace eng {
     Model(key, position, size, anchor)
     {
         colRowCount = dimensions;
-        grid = std::vector<Cell>(colRowCount.first * colRowCount.second);
+        cells = std::vector<std::unique_ptr<CellModel>>(colRowCount.first * colRowCount.second);
     }
 
     GridModel::~GridModel() = default;
@@ -62,7 +62,7 @@ namespace eng {
         return std::make_pair(x, y);
     }
 
-    Cell* GridModel::getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
+    CellModel* GridModel::getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
         int x = static_cast<int>(cellCoordinate.first);
         int y = static_cast<int>(cellCoordinate.second);
         int width = static_cast<int>(colRowCount.first);
@@ -75,10 +75,10 @@ namespace eng {
         }
 
         unsigned int index = static_cast<unsigned int>(y * width + x);
-        return &grid[index];
+        return cells[index].get();
     }
 
-    const Cell* GridModel::getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
+    const CellModel* GridModel::getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
         int x = static_cast<int>(cellCoordinate.first);
         int y = static_cast<int>(cellCoordinate.second);
         int width = static_cast<int>(colRowCount.first);
@@ -91,13 +91,17 @@ namespace eng {
         }
 
         unsigned int index = static_cast<unsigned int>(y * width + x);
-        return &grid[index];
+        return cells[index].get();
     }
 
     std::pair<unsigned int, unsigned int> GridModel::getColRowCount() const {return colRowCount;}
     std::pair<float, float> GridModel::getCellSize() const {
         return std::make_pair(getSize().first/colRowCount.first, getSize().second/colRowCount.second);
     }
+    const std::vector<std::unique_ptr<CellModel>>& GridModel::getConstCells() const {
+        return cells;
+    }
+
     bool GridModel::isInBounds(const std::pair<unsigned int, unsigned int>& gridCoordinate) const {
         const unsigned int x = gridCoordinate.first;
         const unsigned int y = gridCoordinate.second;
@@ -146,7 +150,7 @@ namespace eng {
 
                 const auto index = static_cast<std::size_t>(neighbourRow) * width + static_cast<std::size_t>(neighbourCol);
 
-                if (grid[index].alive)
+                if (cells[index]->isAlive())
                     ++count;
             }
         }
@@ -168,14 +172,14 @@ namespace eng {
     //Logic
     //----------------------------------------------------------------------------------------------------------------------
     void GridModel::allOn() {
-        for (Cell& cell : grid) {
-            cell.alive = true;
+        for (auto& cell : cells) {
+            cell->setAlive();
         }
     }
 
     void GridModel::allOff() {
-        for (Cell& cell : grid) {
-            cell.alive = false;
+        for (auto& cell : cells) {
+            cell->setAlive(false);
         }
     }
 
@@ -183,15 +187,15 @@ namespace eng {
         toggleCell(getRandomCellCoordinate());
     }
     void GridModel::toggleCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
-        if (!isInBounds(cellCoordinate)) return; // silently ignore; caller (Game) is responsible for valid coords later
-        Cell* cell = getMutableCell(cellCoordinate);
-        cell->alive = !cell->alive;
+        if (!isInBounds(cellCoordinate)) return;
+        CellModel* cell = getMutableCell(cellCoordinate);
+        cell->toggleAlive();
     }
 
     void GridModel::setAlive(const std::pair<unsigned int, unsigned int>& cellCoordinate, bool alive) {
         if (!isInBounds(cellCoordinate)) return;
-        Cell* cell = getMutableCell(cellCoordinate);
-        cell->alive = alive;
+        CellModel* cell = getMutableCell(cellCoordinate);
+        cell->setAlive();
     }
 
     void GridModel::updateModel() {
@@ -199,9 +203,16 @@ namespace eng {
         step();
     }
 
+    void GridModel::calibrateView() {
+        for (auto& cell : cells) {
+            if (!cell){continue;}
+            cell->calibrateView();
+        }
+    }
+
     void GridModel::onClick(const std::pair<float, float> & worldCoordinates){
         if (isAt(worldCoordinates)) {
-            getMutableCell(getCellCoordinate(worldCoordinates))->switchState();
+            getMutableCell(getCellCoordinate(worldCoordinates))->toggleAlive();
         }
     }
 }

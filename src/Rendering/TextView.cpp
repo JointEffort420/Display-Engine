@@ -166,7 +166,7 @@ namespace eng {
     // View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
 
-    void TextView::draw() {
+    void TextView::draw() const {
         if (!isVisible() or text->getString().isEmpty()) {
             return;
         }

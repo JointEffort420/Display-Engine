@@ -79,7 +79,7 @@ namespace eng {
     //View, Draw, Print & Debug
     //----------------------------------------------------------------------------------------------------------------------
 
-    void CompositeView::draw() {
+    void CompositeView::draw() const {
         if (!isVisible()) {
             return;
         }

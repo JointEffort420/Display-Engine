@@ -17,7 +17,7 @@
 namespace eng {
     class SceneManager;
 
-    class Scene {
+    class Scene : public IInputObserver{
     private:
         EngineContext& ctx;
         std::unique_ptr<TimerManager> timers;
@@ -74,8 +74,8 @@ namespace eng {
         virtual void updateViews();
         void reset();
 
-        template<typename StateT, typename... Args>
-        void stateTransition(Args&&... args);
+        template<class SceneT, class ... Args>
+        void sceneTransition(Args &&... args);
 
         //----------------------------------------------------------------------------------------------------------------------
         //Input (via StateManager)

@@ -30,7 +30,7 @@ namespace eng {
         //Constructors & Destructor
         //----------------------------------------------------------------------------------------------------------------------
         PolygonView() = delete;
-        PolygonView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera, const PolygonViewConfig& config);
+        PolygonView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera, const PolygonViewConfig& config = defaultPolygonConfig);
 
         //----------------------------------------------------------------------------------------------------------------------
         //Setters
@@ -67,7 +67,7 @@ namespace eng {
         //----------------------------------------------------------------------------------------------------------------------
         //View, Draw, Print & Debug
         //----------------------------------------------------------------------------------------------------------------------
-        void draw() override;
+        void draw() const override;
     };
 }
 

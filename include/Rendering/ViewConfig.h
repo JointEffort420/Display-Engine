@@ -65,6 +65,8 @@ namespace eng {
         sf::Color deadColor = sf::Color::Black;
         sf::Color gridLineColor = sf::Color::Red;
 
+        std::pair<unsigned int, unsigned int> gridDimensions = {10, 10};
+
         float lineWidth = 1.0f;
     };
 

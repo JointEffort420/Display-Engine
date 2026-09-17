@@ -6,22 +6,15 @@
 #include <ostream>
 
 #include "Model.h"
+#include <Logic/CellModel.h>
 
 namespace eng {
   class GridView;
   class ModelFactory;
 
-  struct Cell {
-   bool alive = false;
-
-   void switchState() {
-    alive = !alive;
-   }
-  };
-
   class GridModel : public Model {
   private:
-   std::vector<Cell> grid;
+   std::vector<std::unique_ptr<CellModel>> cells;
    std::pair<unsigned int, unsigned int> colRowCount;//Determines amount of rows and columns
 
    bool on = false;
@@ -29,7 +22,7 @@ namespace eng {
    bool walls = true;
 
   protected:
-   Cell* getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
+   CellModel* getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
 
   public:
    //----------------------------------------------------------------------------------------------------------------------
@@ -53,9 +46,10 @@ namespace eng {
    //----------------------------------------------------------------------------------------------------------------------
    [[nodiscard]] std::pair<unsigned int, unsigned int> getCellCoordinate(const std::pair<float, float>& cellWorldPosition) const;
    [[nodiscard]] std::pair<unsigned int, unsigned int> getRandomCellCoordinate() const;
-   [[nodiscard]] const Cell* getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
+   [[nodiscard]] const CellModel* getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
    [[nodiscard]] std::pair<unsigned int, unsigned int> getColRowCount() const;
    [[nodiscard]] std::pair<float, float> getCellSize() const;
+   [[nodiscard]] const std::vector<std::unique_ptr<CellModel>>& getConstCells() const;
    [[nodiscard]] bool isInBounds(const std::pair<unsigned int, unsigned int>& gridCoordinate) const;//Checks if a world coordinate is still within grid
    [[nodiscard]] bool isOn() const;
    [[nodiscard]] bool hasWalls() const;
@@ -70,6 +64,8 @@ namespace eng {
    void toggleCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
    void setAlive(const std::pair<unsigned int, unsigned int>& cellCoordinate, bool alive);
    void updateModel();
+   void calibrateView() override;//Also take into account the cells
+   void drawCells();
    virtual void step(){}
 
    void onClick(const std::pair<float, float> & worldCoordinates);
