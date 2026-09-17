@@ -7,7 +7,7 @@
 
 #include <functional>
 
-#include "StateFactory.h"
+#include "SceneFactory.h"
 #include "../Input/IInputObserver.h"
 #include "Logic/ModelFactory.h"
 #include "Logic/Model.h"
@@ -15,30 +15,30 @@
 #include "Time/TimerManager.h"
 
 namespace eng {
-    class StateManager;
+    class SceneManager;
 
-    class State {
+    class Scene {
     private:
         EngineContext& ctx;
         std::unique_ptr<TimerManager> timers;
         std::vector<std::unique_ptr<Model>> models;
 
-        bool listening;//Determines wether state should be subscriber to input
-        bool showing ;//Determines wether state is drawn
-        bool updating ;//Determines wether state is updating
+        bool listening;//Determines wether Scene should be subscriber to input
+        bool showing ;//Determines wether Scene is drawn
+        bool updating ;//Determines wether Scene is updating
 
     protected:
         void after(float seconds, std::function<void()> callback);
         void every(float seconds, std::function<void()> callback);
 
     public:
-        virtual ~State() = default;
+        virtual ~Scene() = default;
 
         //----------------------------------------------------------------------------------------------------------------------
         //Constructors & Destructor
         //----------------------------------------------------------------------------------------------------------------------
-        State() = delete;
-        explicit State(StateFactory::Key key, EngineContext& ctx, bool updating = true, bool listening = true, bool showing = true);
+        Scene() = delete;
+        explicit Scene(SceneFactory::Key key, EngineContext& ctx, bool updating = true, bool listening = true, bool showing = true);
 
         //----------------------------------------------------------------------------------------------------------------------
         //Setters
@@ -91,6 +91,6 @@ namespace eng {
         virtual void draw();
     };
 }
-#include "State.tpp"
+#include "Scene.tpp"
 
 #endif //DISPLAYENGINE_STATE_H

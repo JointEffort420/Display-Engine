@@ -57,21 +57,19 @@ add_library(DisplayEngine
         src/Resources/FontManager.cpp
         src/Resources/TextureManager.cpp
 
-        #   States
-        src/States/StateFactory.cpp
-        src/States/State.cpp
-        src/States/StateManager.cpp
+        #   Scenes
+        src/Scenes/SceneFactory.cpp
+        src/Scenes/Scene.cpp
+        src/Scenes/SceneManager.cpp
 
         #   Window
         src/Window/Camera.cpp
         src/Window/Window.cpp
-        include/Window/DesktopData.h
         src/Window/DesktopData.cpp
-        include/Time/Clock.h
+
+        #   Timing
         src/Time/Clock.cpp
-        include/Time/Timer.h
         src/Time/Timer.cpp
-        include/Time/TimerManager.h
         src/Time/TimerManager.cpp
 )
 
@@ -107,8 +105,8 @@ target_link_libraries(DisplayEngineSandbox
 
 add_executable(DisplayEngineGameOfLife
         examples/GameOfLife/main.cpp
-        examples/GameOfLife/MenuState.cpp
-        examples/GameOfLife/MenuState.h
+        examples/GameOfLife/MenuScene.cpp
+        examples/GameOfLife/MenuScene.h
 )
 
 target_link_libraries(DisplayEngineGameOfLife

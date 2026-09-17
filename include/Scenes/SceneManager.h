@@ -13,18 +13,18 @@
 #include "../Input/IInputObserver.h"
 
 namespace eng {
-    class State;
+    class Scene;
 
-    class StateManager : public IInputObserver {
+    class SceneManager : public IInputObserver {
     private:
         // The vector is used as a stack
-        std::vector<std::unique_ptr<State>> stateStack;
+        std::vector<std::unique_ptr<Scene>> stateStack;
 
         //All transitions will pass through this request-form first.
         //This prevents undevined behaviour when iterating over stateStack
         struct PendingTransition {
             enum class Type {Push, Pop} type;
-            std::unique_ptr<State> state;
+            std::unique_ptr<Scene> state;
         };
         std::vector<PendingTransition> pendingTransitions;
         void applyPendingTransitions();
@@ -33,14 +33,14 @@ namespace eng {
         //------------------------------------------------------------------------------------------------------------------
         // Constructors & Destructor
         //------------------------------------------------------------------------------------------------------------------
-        explicit StateManager();
-        ~StateManager() override;
+        explicit SceneManager();
+        ~SceneManager() override;
 
-        StateManager(const StateManager&) = delete;
-        StateManager& operator=(const StateManager&) = delete;
+        SceneManager(const SceneManager&) = delete;
+        SceneManager& operator=(const SceneManager&) = delete;
 
-        StateManager(StateManager&&) = default;
-        StateManager& operator=(StateManager&&) = default;
+        SceneManager(SceneManager&&) = default;
+        SceneManager& operator=(SceneManager&&) = default;
 
         //------------------------------------------------------------------------------------------------------------------
         // Getters
@@ -48,14 +48,14 @@ namespace eng {
 
         [[nodiscard]] bool isEmpty() const;
         [[nodiscard]] std::size_t depth() const;
-        [[nodiscard]] State& topState();
-        [[nodiscard]] const std::vector<std::unique_ptr<State>>& getStates() const;
+        [[nodiscard]] Scene& topState();
+        [[nodiscard]] const std::vector<std::unique_ptr<Scene>>& getStates() const;
 
         //------------------------------------------------------------------------------------------------------------------
         // State management
         //------------------------------------------------------------------------------------------------------------------
-        void pushState(std::unique_ptr<State> state);
-        void requestPush(std::unique_ptr<State> state);
+        void pushState(std::unique_ptr<Scene> state);
+        void requestPush(std::unique_ptr<Scene> state);
         void popState();
         void requestPop();
 

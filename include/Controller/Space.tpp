@@ -3,7 +3,7 @@
 
 #include <utility>
 
-#include "States/StateFactory.h"
+#include "Scenes/SceneFactory.h"
 
 namespace eng {
     class Space;
@@ -16,11 +16,11 @@ namespace eng {
         );
     }
 
-    template<typename StateT, typename... Args>
+    template<typename SceneT, typename... Args>
     void Space::pushState(Args&&... args)
     {
         stateManager->pushState(
-            StateFactory::createState<StateT>(
+            SceneFactory::createState<SceneT>(
                 *ctx,
                 std::forward<Args>(args)...
             )

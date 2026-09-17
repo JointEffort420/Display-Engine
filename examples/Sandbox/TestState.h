@@ -7,9 +7,9 @@
 
 #include <Controller/Space.h>
 
-class TestState : public eng::State {
+class TestState : public eng::Scene {
 public:
-    using State::State;
+    using Scene::Scene;
     void onEnter() override;
     void onExit() override{}
 };

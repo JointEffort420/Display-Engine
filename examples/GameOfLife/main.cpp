@@ -5,10 +5,11 @@
 #include <iostream>
 #include <ostream>
 
-#include "MenuState.h"
+#include "MenuScene.h"
 
 int main() {
     std::cout << "Game of Life initiated" << std::endl;
-    Space space = Space("Game of Life");
-    space.start<MenuState>();
+    eng::Space space = eng::Space("Game of Life");
+    space.start<MenuScene>();
+    space.run();
 }

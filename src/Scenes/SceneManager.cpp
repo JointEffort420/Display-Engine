@@ -2,26 +2,26 @@
 // Created by natha on 9/7/2026.
 //
 
-#include "States/StateManager.h"
-#include "States/State.h"
+#include "Scenes/SceneManager.h"
+#include "Scenes/Scene.h"
 
 #include <iostream>
 
 namespace eng {
-    StateManager::StateManager(): IInputObserver() {
+    SceneManager::SceneManager(): IInputObserver() {
         Input::GetInstance()->attach(this);
     }
 
-    StateManager::~StateManager() {
+    SceneManager::~SceneManager() {
         Input::GetInstance()->detach(this);
     }
     //----------------------------------------------------------------------------------------------------------------------
     // Getters
     //----------------------------------------------------------------------------------------------------------------------
-    bool StateManager::isEmpty() const {return stateStack.empty();}
-    std::size_t StateManager::depth() const {return stateStack.size();}
+    bool SceneManager::isEmpty() const {return stateStack.empty();}
+    std::size_t SceneManager::depth() const {return stateStack.size();}
 
-    State& StateManager::topState()
+    Scene& SceneManager::topState()
     {
         if (stateStack.empty())
         {
@@ -33,7 +33,7 @@ namespace eng {
         return *stateStack.back();
     }
 
-    const std::vector<std::unique_ptr<State>>& StateManager::getStates() const {
+    const std::vector<std::unique_ptr<Scene>>& SceneManager::getStates() const {
         return stateStack;
     }
 
@@ -41,7 +41,7 @@ namespace eng {
     // State management
     //----------------------------------------------------------------------------------------------------------------------
 
-    void StateManager::pushState(std::unique_ptr<State> state)
+    void SceneManager::pushState(std::unique_ptr<Scene> state)
     {
         if (!state)
         {
@@ -55,11 +55,11 @@ namespace eng {
         stateStack.push_back(std::move(state));
     }
 
-    void StateManager::requestPush(std::unique_ptr<State> state) {
+    void SceneManager::requestPush(std::unique_ptr<Scene> state) {
         pendingTransitions.push_back({PendingTransition::Type::Push, std::move(state)});
     }
 
-    void StateManager::popState()
+    void SceneManager::popState()
     {
         if (stateStack.empty())
         {
@@ -88,11 +88,11 @@ namespace eng {
         stateStack.pop_back();
     }
 
-    void StateManager::requestPop() {
+    void SceneManager::requestPop() {
         pendingTransitions.push_back({PendingTransition::Type::Push, nullptr});
     }
 
-    void StateManager::applyPendingTransitions() {
+    void SceneManager::applyPendingTransitions() {
         //Here the entries in 'pendingTransitions' get applied
         while (!pendingTransitions.empty()) {
             std::vector<PendingTransition> batch = std::move(pendingTransitions);
@@ -112,7 +112,7 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     // Logic
     //----------------------------------------------------------------------------------------------------------------------
-    void StateManager::update() {
+    void SceneManager::update() {
         if (stateStack.empty()) {return;}
         for (auto& state : stateStack) {state->update();}
         applyPendingTransitions(); //Only after iterator-logic. Prevents UB
@@ -121,13 +121,13 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     // Input
     //----------------------------------------------------------------------------------------------------------------------
-    bool StateManager::onLeftPressed(
+    bool SceneManager::onLeftPressed(
         const std::pair<unsigned int, unsigned int>& coordinates
     )
     {
         for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
         {
-            State& state = **it;
+            Scene& state = **it;
 
             if (!state.isAttachedToInput())
             {
@@ -143,13 +143,13 @@ namespace eng {
         return false;
     }
 
-    bool StateManager::onLeftReleased(
+    bool SceneManager::onLeftReleased(
         const std::pair<unsigned int, unsigned int>& coordinates
     )
     {
         for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
         {
-            State& state = **it;
+            Scene& state = **it;
 
             if (!state.isAttachedToInput())
             {
@@ -165,13 +165,13 @@ namespace eng {
         return false;
     }
 
-    bool StateManager::onMouseMoved(
+    bool SceneManager::onMouseMoved(
         const std::pair<unsigned int, unsigned int>& coordinates
     )
     {
         for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it)
         {
-            State& state = **it;
+            Scene& state = **it;
 
             if (!state.isAttachedToInput())
             {
@@ -187,9 +187,9 @@ namespace eng {
         return false;
     }
 
-    void StateManager::onResize() {
+    void SceneManager::onResize() {
         for (auto it = stateStack.rbegin(); it != stateStack.rend(); ++it) {
-            State& state = **it;
+            Scene& state = **it;
             state.onResize();
         }
     }
@@ -197,7 +197,7 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     // Drawing
     //----------------------------------------------------------------------------------------------------------------------
-    void StateManager::draw()
+    void SceneManager::draw()
     {
         if (stateStack.empty())
         {

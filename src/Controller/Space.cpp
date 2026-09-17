@@ -18,7 +18,7 @@ namespace eng {
             windowSize
         );
 
-        stateManager = std::make_unique<StateManager>();
+        stateManager = std::make_unique<SceneManager>();
 
         clock = std::make_unique<Clock>();
 
@@ -65,8 +65,8 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     //Getters
     //----------------------------------------------------------------------------------------------------------------------
-    const State& Space::getTopState() const {return ctx->stateManager.topState();}
-    const std::vector<std::unique_ptr<State>>& Space::getStates() const {return ctx->stateManager.getStates();}
+    const Scene& Space::getTopState() const {return ctx->stateManager.topState();}
+    const std::vector<std::unique_ptr<Scene>>& Space::getStates() const {return ctx->stateManager.getStates();}
     std::pair<float, float> Space::getSpaceSize(){return ctx->camera.getWorldDimensions();}
     float Space::getSpaceWidth(){return ctx->camera.getWorldDimensions().first;}
     float Space::getSpaceHeight(){return ctx->camera.getWorldDimensions().second;}

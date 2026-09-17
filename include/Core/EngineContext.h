@@ -4,16 +4,16 @@
 namespace eng {
     class Window;
     class Camera;
-    class StateManager;
+    class SceneManager;
     class Clock;
 
     struct EngineContext {
         Window& window;
         Camera& camera;
-        StateManager& stateManager;
+        SceneManager& stateManager;
         Clock& clock;
 
-        EngineContext(Window& win, Camera& cam, StateManager& sm, Clock& ck)
+        EngineContext(Window& win, Camera& cam, SceneManager& sm, Clock& ck)
             : window(win), camera(cam), stateManager(sm), clock(ck) {}
     };
 }

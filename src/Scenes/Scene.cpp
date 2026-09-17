@@ -2,7 +2,7 @@
 // Created by natha on 9/7/2026.
 //
 
-#include "States/State.h"
+#include "Scenes/Scene.h"
 #include "Logic/Model.h"
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 #include "Window/Camera.h"
 
 namespace eng {
-    State::State(StateFactory::Key key, EngineContext& ctx, bool updating, bool listening, bool showing):
+    Scene::Scene(SceneFactory::Key key, EngineContext& ctx, bool updating, bool listening, bool showing):
     ctx(ctx),
     listening(listening),
     showing(showing),
@@ -29,17 +29,17 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     //Timers
     //----------------------------------------------------------------------------------------------------------------------
-    void State::after(float duration, std::function<void()> callback){
+    void Scene::after(float duration, std::function<void()> callback){
         timers->addTimer(duration, std::move(callback), false);
     }
-    void State::every(float interval, std::function<void()> callback){
+    void Scene::every(float interval, std::function<void()> callback){
         timers->addTimer(interval, std::move(callback), true);
     }
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
     //----------------------------------------------------------------------------------------------------------------------
-    void State::onExit() {
+    void Scene::onExit() {
         models.clear();
 
         listening = false;
@@ -47,34 +47,34 @@ namespace eng {
         updating = false;
     }
 
-    void State::activate() {
+    void Scene::activate() {
         updating = true;
     }
-    void State::deactivate() {
+    void Scene::deactivate() {
         updating = false;
     }
 
-    void State::show() {
+    void Scene::show() {
         showing = true;
     }
 
-    void State::hide() {
+    void Scene::hide() {
         showing = false;
     }
 
-    void State::attachInput() {
+    void Scene::attachInput() {
         listening = true;
     }
 
-    void State::detachInput() {
+    void Scene::detachInput() {
         listening = false;
     }
 
-    void State::addModel(std::unique_ptr<Model> model) {
+    void Scene::addModel(std::unique_ptr<Model> model) {
         models.push_back(std::move(model));
     }
 
-    void State::addModel(const std::pair<float, float>& position, const std::pair<float, float>& size, const ViewConfig& config, Anchor anchor) {
+    void Scene::addModel(const std::pair<float, float>& position, const std::pair<float, float>& size, const ViewConfig& config, Anchor anchor) {
         models.push_back(ModelFactory::createModel(ctx, position, size, config, anchor));
     }
 
@@ -82,40 +82,40 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     //Getters
     //----------------------------------------------------------------------------------------------------------------------
-    std::pair<float, float> State::getSpaceSize() const {return ctx.camera.getWorldDimensions();}
-    const std::vector<std::unique_ptr<Model>>& State::getModels() const {return models;}
-    EngineContext &State::getCtx() {return ctx;}
-    bool State::isActive() const {return updating;}
-    bool State::isShowing() const {return showing;}
-    bool State::isAttachedToInput() const {return listening;}
+    std::pair<float, float> Scene::getSpaceSize() const {return ctx.camera.getWorldDimensions();}
+    const std::vector<std::unique_ptr<Model>>& Scene::getModels() const {return models;}
+    EngineContext &Scene::getCtx() {return ctx;}
+    bool Scene::isActive() const {return updating;}
+    bool Scene::isShowing() const {return showing;}
+    bool Scene::isAttachedToInput() const {return listening;}
 
     //----------------------------------------------------------------------------------------------------------------------
     //Logic
     //----------------------------------------------------------------------------------------------------------------------
-    void State::update() {
+    void Scene::update() {
         if (!updating) {return;}
         timers->update(getCtx().clock.getDeltaTime());
         updateModels();
         updateViews();
     }
-    void State::updateModels() {
+    void Scene::updateModels() {
         for (auto& model : models) {
             model->update();
         }
     }
-    void State::updateViews() {
+    void Scene::updateViews() {
         for (auto& model : models) {
             model->updateView();
         }
     }
 
-    void State::onResize() {
+    void Scene::onResize() {
         for (std::unique_ptr<Model>& model : models) {
             model->calibrateView();
         }
     }
 
-    void State::draw() {
+    void Scene::draw() {
         if (!showing) {return;}
 
         for (auto const& model : models) {
@@ -123,7 +123,7 @@ namespace eng {
         }
     }
 
-    void State::reset() {
+    void Scene::reset() {
         onExit();
         onEnter();
     }

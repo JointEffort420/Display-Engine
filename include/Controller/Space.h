@@ -5,10 +5,10 @@
 
 #include "Window/Window.h"
 #include "Window/Camera.h"
-#include "States/StateManager.h"
+#include "Scenes/SceneManager.h"
 #include "Core/EngineContext.h"
 #include "Window/DesktopData.h"
-#include <States/State.h>
+#include <Scenes/Scene.h>
 #include "../Time/Clock.h"
 
 namespace eng {
@@ -17,7 +17,7 @@ namespace eng {
     private:
         std::unique_ptr<Window> window;
         std::unique_ptr<Camera> camera;
-        std::unique_ptr<StateManager> stateManager;
+        std::unique_ptr<SceneManager> stateManager;
         std::unique_ptr<Clock> clock;
         std::unique_ptr<EngineContext> ctx;
 
@@ -53,8 +53,8 @@ namespace eng {
         //----------------------------------------------------------------------------------------------------------------------
         //Getters
         //----------------------------------------------------------------------------------------------------------------------
-        [[nodiscard]] const State& getTopState() const;
-        [[nodiscard]] const std::vector<std::unique_ptr<State>>& getStates() const;
+        [[nodiscard]] const Scene& getTopState() const;
+        [[nodiscard]] const std::vector<std::unique_ptr<Scene>>& getStates() const;
         [[nodiscard]] std::pair<float, float> getSpaceSize();
         [[nodiscard]] float getSpaceWidth();
         [[nodiscard]] float getSpaceHeight();
