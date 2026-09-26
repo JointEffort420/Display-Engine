@@ -70,15 +70,6 @@ namespace eng {
         listening = false;
     }
 
-    void Scene::addModel(std::unique_ptr<Model> model) {
-        models.push_back(std::move(model));
-    }
-
-    void Scene::addModel(const std::pair<float, float>& position, const std::pair<float, float>& size, const ViewConfig& config, Anchor anchor) {
-        models.push_back(ModelFactory::createModel(ctx, position, size, config, anchor));
-    }
-
-
     //----------------------------------------------------------------------------------------------------------------------
     //Getters
     //----------------------------------------------------------------------------------------------------------------------

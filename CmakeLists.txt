@@ -75,6 +75,8 @@ add_library(DisplayEngine
         src/Logic/CellModel.cpp
         include/Rendering/CellView.h
         src/Rendering/CellView.cpp
+        include/Logic/CellBuilder.h
+        src/Logic/CellBuilder.cpp
 )
 
 target_include_directories(DisplayEngine

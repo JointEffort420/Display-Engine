@@ -18,8 +18,6 @@ namespace eng {
     private:
         const GridModel& grid;
         float lineWidth;
-        sf::Color aliveColor = sf::Color::Red;
-        sf::Color deadColor = sf::Color::Black;
         sf::Color gridLineColor = sf::Color::Red;
 
     public:
@@ -32,7 +30,7 @@ namespace eng {
         //----------------------------------------------------------------------------------------------------------------------
         //Setters
         //----------------------------------------------------------------------------------------------------------------------
-        void setColors(const sf::Color& aliveColor, const sf::Color& deadColor, const sf::Color& gridLineColor);
+        void setColor(const sf::Color& gridLineColor);
 
         //----------------------------------------------------------------------------------------------------------------------
         //Getters

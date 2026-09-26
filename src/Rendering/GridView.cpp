@@ -3,6 +3,8 @@
 //
 
 #include "Rendering/GridView.h"
+
+#include "Logic/CellModel.h"
 #include "Logic/GridModel.h"
 
 namespace eng {
@@ -13,17 +15,13 @@ namespace eng {
         View(key, grid, window, camera),
         grid(grid),
         lineWidth(config.lineWidth),
-        aliveColor(config.aliveColor),
-        deadColor(config.deadColor),
         gridLineColor(config.gridLineColor)
     {}
 
     //----------------------------------------------------------------------------------------------------------------------
     //Setters
     //----------------------------------------------------------------------------------------------------------------------
-    void GridView::setColors(const sf::Color& ac, const sf::Color& dc, const sf::Color& glc) {
-        aliveColor = ac;
-        deadColor = dc;
+    void GridView::setColor(const sf::Color& glc) {
         gridLineColor = glc;
     }
 
@@ -41,6 +39,14 @@ namespace eng {
     void GridView::draw() const {
         if (!isVisible()) {
             return;
+        }
+
+        //individual cells
+         for (const auto& cell : grid.getConstCells()) {
+            if (cell == nullptr) {
+                continue;
+            }
+            cell->drawView();
         }
 
         // Grid squares
@@ -61,22 +67,14 @@ namespace eng {
                     position.second + row * cellHeight
                 };
 
-                sf::RectangleShape cell;
-                cell.setPosition(cellPosition);
-                cell.setSize({cellWidth, cellHeight});
-                cell.setFillColor(deadColor);
-                cell.setOutlineThickness(lineWidth);
+                sf::RectangleShape cellOutline;
+                cellOutline.setPosition(cellPosition);
+                cellOutline.setSize({cellWidth, cellHeight});
+                cellOutline.setFillColor(sf::Color::Transparent);
+                cellOutline.setOutlineThickness(lineWidth);
 
-                getWindow().draw(cell);
+                getWindow().draw(cellOutline);
             }
-        }
-
-        //individual cells
-         for (const auto& cell : grid.getConstCells()) {
-            if (cell == nullptr) {
-                continue;
-            }
-            cell->drawView();
         }
     }
 }

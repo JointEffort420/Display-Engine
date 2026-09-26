@@ -15,6 +15,7 @@
 #include <variant>
 #include <vector>
 
+#include "Logic/CellBuilder.h"
 #include "Resources/FontManager.h"
 #include "Resources/TextureManager.h"
 
@@ -34,7 +35,7 @@ namespace eng {
         bool edge = false;
         float edgeThickness = 2.f;
 
-        sf::Color fillColor = sf::Color::Black;
+        sf::Color fillColor = sf::Color(50, 50, 50);
         sf::Color edgeColor = sf::Color::White;
     };
 
@@ -61,13 +62,12 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
 
     struct GridViewConfig {
-        sf::Color aliveColor = sf::Color::Red;
-        sf::Color deadColor = sf::Color::Black;
         sf::Color gridLineColor = sf::Color::Red;
 
         std::pair<unsigned int, unsigned int> gridDimensions = {10, 10};
-
         float lineWidth = 1.0f;
+
+        CellBuilder cellBuilder = defaultCellBuilder();
     };
 
     inline const GridViewConfig defaultGridViewConfig = {};

@@ -1,75 +1,81 @@
+// GridModel.h
 #ifndef DISPLAYENGINE_GRIDMODEL_H
 #define DISPLAYENGINE_GRIDMODEL_H
 
 #include <vector>
-#include <iostream>
-#include <ostream>
+#include <utility>
+#include <memory>
+#include <optional>
+#include <functional>
 
+#include "CellBuilder.h"
 #include "Model.h"
-#include <Logic/CellModel.h>
 
 namespace eng {
-  class GridView;
-  class ModelFactory;
+    class CellModel;
+    class ModelFactory;
+    struct EngineContext;
 
-  class GridModel : public Model {
-  private:
-   std::vector<std::unique_ptr<CellModel>> cells;
-   std::pair<unsigned int, unsigned int> colRowCount;//Determines amount of rows and columns
+    class GridModel : public Model {
+    private:
+        EngineContext& ctx;
+        CellBuilder cellBuilder;
 
-   bool on = false;
-   // !toroidal topology (wrap-around/teleport behavior)
-   bool walls = true;
+        std::vector<std::unique_ptr<CellModel>> cells;       // nullptr slot == dead/empty cell
+        std::pair<unsigned int, unsigned int> colRowCount;   // columns, rows
 
-  protected:
-   CellModel* getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
+        bool on = false;
+        bool walls = true;
 
-  public:
-   //----------------------------------------------------------------------------------------------------------------------
-   //Constructors & Destructor
-   //----------------------------------------------------------------------------------------------------------------------
-   GridModel() = delete;
-   GridModel(ModelFactory::Key key, const std::pair<float, float>& position, const std::pair<float, float>& size, const std::pair<unsigned int,unsigned int>& dimensions, Anchor anchor = Anchor::Center);
-   ~GridModel() override;
+        [[nodiscard]] std::optional<std::size_t> resolveIndex(int x, int y) const;
+        [[nodiscard]] std::optional<std::size_t> resolveIndex(std::pair<unsigned int, unsigned int> cellCoordinate) const;
+        [[nodiscard]] std::pair<float, float> cellPositionFor(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
 
-   //----------------------------------------------------------------------------------------------------------------------
-   //Setters
-   //----------------------------------------------------------------------------------------------------------------------
-   void setRowColCount(const std::pair<unsigned int, unsigned int>& rowColCount);
-   void toggle();
-   void play();
-   void pause();
-   void setWalls(bool walls);
+        void resizeCells();
 
-   //----------------------------------------------------------------------------------------------------------------------
-   //Getters
-   //----------------------------------------------------------------------------------------------------------------------
-   [[nodiscard]] std::pair<unsigned int, unsigned int> getCellCoordinate(const std::pair<float, float>& cellWorldPosition) const;
-   [[nodiscard]] std::pair<unsigned int, unsigned int> getRandomCellCoordinate() const;
-   [[nodiscard]] const CellModel* getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
-   [[nodiscard]] std::pair<unsigned int, unsigned int> getColRowCount() const;
-   [[nodiscard]] std::pair<float, float> getCellSize() const;
-   [[nodiscard]] const std::vector<std::unique_ptr<CellModel>>& getConstCells() const;
-   [[nodiscard]] bool isInBounds(const std::pair<unsigned int, unsigned int>& gridCoordinate) const;//Checks if a world coordinate is still within grid
-   [[nodiscard]] bool isOn() const;
-   [[nodiscard]] bool hasWalls() const;
-   [[nodiscard]] unsigned int getAliveNeighbourCount(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
+    protected:
+        CellModel* getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
 
-   //----------------------------------------------------------------------------------------------------------------------
-   //Logic
-   //----------------------------------------------------------------------------------------------------------------------
-   void allOn();
-   void allOff();
-   void doSomething();
-   void toggleCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
-   void setAlive(const std::pair<unsigned int, unsigned int>& cellCoordinate, bool alive);
-   void updateModel();
-   void calibrateView() override;//Also take into account the cells
-   void drawCells();
-   virtual void step(){}
+    public:
+        GridModel() = delete;
+        GridModel(ModelFactory::Key key,
+                  EngineContext& ctx,
+                  const std::pair<float, float>& position,
+                  const std::pair<float, float>& size,
+                  const std::pair<unsigned int, unsigned int>& dimensions,
+                  CellBuilder cellBuilder,
+                  Anchor anchor = Anchor::Center);
+        ~GridModel() override;
 
-   void onClick(const std::pair<float, float> & worldCoordinates);
-  };
+        void setRowColCount(const std::pair<unsigned int, unsigned int>& rowColCount);
+        void toggle();
+        void play();
+        void pause();
+        void setWalls(bool walls);
+
+        void addCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
+        void toggleCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
+        void removeCell(const std::pair<unsigned int, unsigned int>& cellCoordinate);
+        void fill();
+        void empty();
+
+        [[nodiscard]] std::pair<unsigned int, unsigned int> getCellCoordinate(const std::pair<float, float>& cellWorldPosition) const;
+        [[nodiscard]] std::optional<std::size_t> getCellIndex(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
+        [[nodiscard]] std::pair<unsigned int, unsigned int> getRandomCellCoordinate() const;
+        [[nodiscard]] const CellModel* getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
+        [[nodiscard]] std::pair<unsigned int, unsigned int> getColRowCount() const;
+        [[nodiscard]] std::pair<float, float> getCellSize() const;
+        [[nodiscard]] const std::vector<std::unique_ptr<CellModel>>& getConstCells() const;
+        [[nodiscard]] bool isInBounds(const std::pair<unsigned int, unsigned int>& gridCoordinate) const;
+        [[nodiscard]] bool isOn() const;
+        [[nodiscard]] bool hasWalls() const;
+        [[nodiscard]] unsigned int getNeighbourCount(const std::pair<unsigned int, unsigned int>& cellCoordinate) const;
+
+        void updateModel();
+        void calibrateView() override;
+        virtual void step() {}
+        bool onClick(const std::pair<float, float>& worldCoordinates);
+    };
 }
 
 #endif //DISPLAYENGINE_GRIDMODEL_H

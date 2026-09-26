@@ -1,218 +1,209 @@
-//
-// Created by natha on 9/3/2026.
-//
-
+// GridModel.cpp
 #include "Logic/GridModel.h"
-#include "Rendering/GridView.h"
+#include "Logic/CellModel.h"
+#include "Core/EngineContext.h"
+
+#include <cstdlib>
+#include <iostream>
 
 namespace eng {
-    //----------------------------------------------------------------------------------------------------------------------
-    //Constructors & Destructor
-    //----------------------------------------------------------------------------------------------------------------------
     GridModel::GridModel(
         ModelFactory::Key key,
+        EngineContext& ctx,
         const std::pair<float, float>& position,
         const std::pair<float, float>& size,
         const std::pair<unsigned int, unsigned int>& dimensions,
-        Anchor anchor):
-    Model(key, position, size, anchor)
+        CellBuilder cellBuilder,
+        Anchor anchor)
+        : Model(key, position, size, anchor), ctx(ctx), cellBuilder(std::move(cellBuilder)), colRowCount(dimensions)
     {
-        colRowCount = dimensions;
-        cells = std::vector<std::unique_ptr<CellModel>>(colRowCount.first * colRowCount.second);
+        resizeCells();
     }
 
     GridModel::~GridModel() = default;
 
-    //----------------------------------------------------------------------------------------------------------------------
-    //Getters
-    //----------------------------------------------------------------------------------------------------------------------
+    void GridModel::resizeCells() {
+        cells.clear();
+        cells.resize(static_cast<std::size_t>(colRowCount.first) * colRowCount.second);
+    }
+
+    std::optional<std::size_t> GridModel::resolveIndex(int x, int y) const {
+        const int width  = static_cast<int>(colRowCount.first);
+        const int height = static_cast<int>(colRowCount.second);
+        if (width <= 0 || height <= 0) return std::nullopt;
+
+        if (!walls) {
+            x = (x % width  + width)  % width;
+            y = (y % height + height) % height;
+        } else if (x < 0 || x >= width || y < 0 || y >= height) {
+            return std::nullopt;
+        }
+        return static_cast<std::size_t>(y) * static_cast<std::size_t>(width) + static_cast<std::size_t>(x);
+    }
+
+    std::optional<std::size_t> GridModel::resolveIndex(std::pair<unsigned int, unsigned int> cellCoordinate) const {
+        return resolveIndex(static_cast<int>(cellCoordinate.first), static_cast<int>(cellCoordinate.second));
+    }
+
+    std::pair<float, float> GridModel::cellPositionFor(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
+        const auto cellSize = getCellSize();
+        return {
+            getPosition().first  + static_cast<float>(cellCoordinate.first)  * cellSize.first,
+            getPosition().second + static_cast<float>(cellCoordinate.second) * cellSize.second
+        };
+    }
+
+    std::optional<std::size_t> GridModel::getCellIndex(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
+        return resolveIndex(cellCoordinate);
+    }
+
     std::pair<unsigned int, unsigned int> GridModel::getCellCoordinate(const std::pair<float, float>& cellWorldPosition) const {
-        std::pair<float, float> worldPosition = this->getPosition();
-        float relativeX = cellWorldPosition.first - worldPosition.first;
-        float relativeY = cellWorldPosition.second - worldPosition.second;
+        const std::pair<float, float> worldPosition = getPosition();
+        const float relativeX = cellWorldPosition.first  - worldPosition.first;
+        const float relativeY = cellWorldPosition.second - worldPosition.second;
 
-        // Check world-space bounds first
         if (relativeX < 0.0f || relativeY < 0.0f ||
-            relativeX >= getSize().first ||
-            relativeY >= getSize().second) {
-
-            std::cerr << "Requesting grid index of cell outside of bounds"
-                      << std::endl;
-
-            // You may prefer throwing an exception or returning a sentinel value.
+            relativeX >= getSize().first || relativeY >= getSize().second) {
+            std::cerr << "GridModel::getCellCoordinate(): position outside grid bounds\n";
             return {0, 0};
-            }
+        }
 
-        float cellWidth =
-            getSize().first / static_cast<float>(colRowCount.first);
-
-        float cellHeight =
-            getSize().second / static_cast<float>(colRowCount.second);
-
-        auto x = static_cast<unsigned int>(relativeX / cellWidth);
-        auto y = static_cast<unsigned int>(relativeY / cellHeight);
-
-        return {x, y};
+        const auto cellSize = getCellSize();
+        return {
+            static_cast<unsigned int>(relativeX / cellSize.first),
+            static_cast<unsigned int>(relativeY / cellSize.second)
+        };
     }
 
     std::pair<unsigned int, unsigned int> GridModel::getRandomCellCoordinate() const {
-        unsigned int x = rand() % colRowCount.first;
-        unsigned int y = rand() % colRowCount.second;
-
-        return std::make_pair(x, y);
+        return {
+            static_cast<unsigned int>(std::rand()) % colRowCount.first,
+            static_cast<unsigned int>(std::rand()) % colRowCount.second
+        };
     }
 
     CellModel* GridModel::getMutableCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
-        int x = static_cast<int>(cellCoordinate.first);
-        int y = static_cast<int>(cellCoordinate.second);
-        int width = static_cast<int>(colRowCount.first);
-        int height = static_cast<int>(colRowCount.second);
-
-        if (!walls) {
-            // Safe mathematical modulo for wrap-around
-            x = (x % width + width) % width;
-            y = (y % height + height) % height;
+        auto index = resolveIndex(cellCoordinate);
+        if (!index) {
+            std::cerr << "GridModel::getMutableCell(): coordinate out of bounds\n";
+            return nullptr;
         }
-
-        unsigned int index = static_cast<unsigned int>(y * width + x);
-        return cells[index].get();
+        return cells[*index].get();
     }
 
     const CellModel* GridModel::getConstCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
-        int x = static_cast<int>(cellCoordinate.first);
-        int y = static_cast<int>(cellCoordinate.second);
-        int width = static_cast<int>(colRowCount.first);
-        int height = static_cast<int>(colRowCount.second);
-
-        if (!walls) {
-            // Safe mathematical modulo for wrap-around
-            x = (x % width + width) % width;
-            y = (y % height + height) % height;
+        auto index = resolveIndex(cellCoordinate);
+        if (!index) {
+            std::cerr << "GridModel::getConstCell(): coordinate out of bounds\n";
+            return nullptr;
         }
-
-        unsigned int index = static_cast<unsigned int>(y * width + x);
-        return cells[index].get();
+        return cells[*index].get();
     }
 
-    std::pair<unsigned int, unsigned int> GridModel::getColRowCount() const {return colRowCount;}
+    std::pair<unsigned int, unsigned int> GridModel::getColRowCount() const { return colRowCount; }
+
     std::pair<float, float> GridModel::getCellSize() const {
-        return std::make_pair(getSize().first/colRowCount.first, getSize().second/colRowCount.second);
+        return { getSize().first / colRowCount.first, getSize().second / colRowCount.second };
     }
-    const std::vector<std::unique_ptr<CellModel>>& GridModel::getConstCells() const {
-        return cells;
-    }
+
+    const std::vector<std::unique_ptr<CellModel>>& GridModel::getConstCells() const { return cells; }
 
     bool GridModel::isInBounds(const std::pair<unsigned int, unsigned int>& gridCoordinate) const {
-        const unsigned int x = gridCoordinate.first;
-        const unsigned int y = gridCoordinate.second;
-        const unsigned int gridWidth = colRowCount.first;
-        const unsigned int gridHeight = colRowCount.second;
-
-        return x < gridWidth && y < gridHeight;
+        return gridCoordinate.first < colRowCount.first && gridCoordinate.second < colRowCount.second;
     }
 
-    bool GridModel::isOn() const {
-        return on;
-    }
+    bool GridModel::isOn() const { return on; }
+    bool GridModel::hasWalls() const { return walls; }
 
-    bool GridModel::hasWalls() const {
-        return walls;
-    }
-
-
-    unsigned int GridModel::getAliveNeighbourCount(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
-        const auto [col, row] = cellCoordinate;
-        const int width = static_cast<int>(colRowCount.first);
-        const int height = static_cast<int>(colRowCount.second);
+    unsigned int GridModel::getNeighbourCount(const std::pair<unsigned int, unsigned int>& cellCoordinate) const {
         unsigned int count = 0;
+        const int col = static_cast<int>(cellCoordinate.first);
+        const int row = static_cast<int>(cellCoordinate.second);
 
         for (int rowOffset = -1; rowOffset <= 1; ++rowOffset) {
             for (int colOffset = -1; colOffset <= 1; ++colOffset) {
-
-                // Don't count the cell itself
-                if (rowOffset == 0 && colOffset == 0)
-                    continue;
-
-                int neighbourRow = static_cast<int>(row) + rowOffset;
-                int neighbourCol = static_cast<int>(col) + colOffset;
-
-                if (walls) {
-                    // Ignore neighbours outside the grid when walls exist
-                    if (neighbourCol < 0 || neighbourCol >= width ||
-                        neighbourRow < 0 || neighbourRow >= height) {
-                        continue;
-                        }
-                } else {
-                    // Wrap around edges when walls do NOT exist
-                    neighbourCol = (neighbourCol % width + width) % width;
-                    neighbourRow = (neighbourRow % height + height) % height;
-                }
-
-                const auto index = static_cast<std::size_t>(neighbourRow) * width + static_cast<std::size_t>(neighbourCol);
-
-                if (cells[index]->isAlive())
-                    ++count;
+                if (rowOffset == 0 && colOffset == 0) continue;
+                auto index = resolveIndex(col + colOffset, row + rowOffset);
+                if (index && cells[*index]) ++count;
             }
         }
-
         return count;
     }
 
-    //----------------------------------------------------------------------------------------------------------------------
-    //Setters
-    //----------------------------------------------------------------------------------------------------------------------
-    void GridModel::setRowColCount(const std::pair<unsigned int, unsigned int>& rcc) {this->colRowCount = rcc;}
-    void GridModel::toggle() {on = !on;}
-    void GridModel::play() {on = true;}
-    void GridModel::pause() {on = false;}
-    void GridModel::setWalls(bool ws) {this->walls = ws;}
+    void GridModel::setRowColCount(const std::pair<unsigned int, unsigned int>& rowColCount) {
+        colRowCount = rowColCount;
+        resizeCells();
+    }
 
+    void GridModel::toggle() { on = !on; }
+    void GridModel::play()   { on = true; }
+    void GridModel::pause()  { on = false; }
+    void GridModel::setWalls(bool ws) { walls = ws; }
 
-    //----------------------------------------------------------------------------------------------------------------------
-    //Logic
-    //----------------------------------------------------------------------------------------------------------------------
-    void GridModel::allOn() {
-        for (auto& cell : cells) {
-            cell->setAlive();
+    void GridModel::addCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
+        auto index = resolveIndex(cellCoordinate);
+        if (!index) {
+            std::cerr << "GridModel::addCell(): coordinate out of bounds\n";
+            return;
         }
-    }
-
-    void GridModel::allOff() {
-        for (auto& cell : cells) {
-            cell->setAlive(false);
+        if (!cellBuilder) {
+            std::cerr << "GridModel::addCell(): no cellBuilder set\n";
+            return;
         }
+        cells[*index] = cellBuilder(ctx, cellPositionFor(cellCoordinate), getCellSize(), Anchor::TopLeft);
     }
 
-    void GridModel::doSomething() {
-        toggleCell(getRandomCellCoordinate());
+    void GridModel::removeCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
+        auto index = resolveIndex(cellCoordinate);
+        if (!index) {
+            std::cerr << "GridModel::removeCell(): coordinate out of bounds\n";
+            return;
+        }
+        cells[*index].reset();
     }
+
     void GridModel::toggleCell(const std::pair<unsigned int, unsigned int>& cellCoordinate) {
-        if (!isInBounds(cellCoordinate)) return;
-        CellModel* cell = getMutableCell(cellCoordinate);
-        cell->toggleAlive();
+        auto index = resolveIndex(cellCoordinate);
+        if (!index) {
+            std::cerr << "GridModel::toggleCell(): coordinate out of bounds\n";
+            return;
+        }
+        if (cells[*index]) {
+            cells[*index].reset();
+        } else {
+            addCell(cellCoordinate);
+        }
     }
 
-    void GridModel::setAlive(const std::pair<unsigned int, unsigned int>& cellCoordinate, bool alive) {
-        if (!isInBounds(cellCoordinate)) return;
-        CellModel* cell = getMutableCell(cellCoordinate);
-        cell->setAlive();
+    void GridModel::fill() {
+        for (unsigned int row = 0; row < colRowCount.second; ++row) {
+            for (unsigned int col = 0; col < colRowCount.first; ++col) {
+                addCell({col, row});
+            }
+        }
+    }
+
+    void GridModel::empty() {
+        for (auto& cell : cells) cell.reset();
     }
 
     void GridModel::updateModel() {
-        if (on == false){return;}
+        if (!on) return;
         step();
     }
 
     void GridModel::calibrateView() {
         for (auto& cell : cells) {
-            if (!cell){continue;}
+            if (!cell) continue;
             cell->calibrateView();
         }
     }
 
-    void GridModel::onClick(const std::pair<float, float> & worldCoordinates){
+    bool GridModel::onClick(const std::pair<float, float>& worldCoordinates) {
         if (isAt(worldCoordinates)) {
-            getMutableCell(getCellCoordinate(worldCoordinates))->toggleAlive();
+            toggleCell(getCellCoordinate(worldCoordinates));
+            return true;
         }
+        return false;
     }
 }

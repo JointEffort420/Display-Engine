@@ -14,6 +14,7 @@
 #include "Core/EngineContext.h"
 
 namespace eng {
+    class CellModel;
     class Model;
     class GridModel;
     class ButtonModel;
@@ -37,6 +38,21 @@ namespace eng {
             const ViewConfig& config = defaultPolygonConfig,
             Anchor anchor = Anchor::TopLeft
         );
+
+        template<typename CellT>
+    static std::unique_ptr<CellT> createCell(
+        EngineContext& ctx,
+        const std::pair<float, float>& position,
+        const std::pair<float, float>& size,
+        const ViewConfig& viewConfig,
+        Anchor anchor = Anchor::TopLeft)
+        {
+            static_assert(std::is_base_of_v<CellModel, CellT>, "CellT must derive from CellModel");
+            auto cell = std::make_unique<CellT>(Key(), position, size, anchor);
+            auto view = ViewFactory::createView(ctx, *cell, viewConfig);
+            cell->setView(Key(), std::move(view));   // matches the pattern already used in createGrid
+            return cell;
+        }
     };
 }
 

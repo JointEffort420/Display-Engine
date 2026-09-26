@@ -1,27 +1,14 @@
-//
-// Created by natha on 9/17/2026.
-//
+#ifndef DISPLAYENGINE_CELLMODEL_H
+#define DISPLAYENGINE_CELLMODEL_H
 
-#ifndef DISPLAYENGINE_CELL_H
-#define DISPLAYENGINE_CELL_H
-
-#include <Logic/Model.h>
+#include "Model.h"
 
 namespace eng {
     class CellModel : public Model {
-    private:
-        bool alive;
-
     public:
-        CellModel();
-
-        bool isAlive() const {return alive;}
-
-        void setAlive(bool a = true) {alive = a;}
-        void toggleAlive() {
-            alive = !alive;
-        }
+        using Model::Model;   // inherits Model(ModelFactory::Key, position, size, anchor)
+        ~CellModel() override = default;
     };
 }
 
-#endif //DISPLAYENGINE_CELL_H
+#endif //DISPLAYENGINE_CELLMODEL_H

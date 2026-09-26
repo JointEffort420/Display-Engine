@@ -12,12 +12,14 @@
 #include "Logic/ModelFactory.h"
 #include "Logic/Model.h"
 #include "Input/Input.h"
+#include "Logic/ButtonModel.h"
+#include "Logic/GridModel.h"
 #include "Time/TimerManager.h"
 
 namespace eng {
     class SceneManager;
 
-    class Scene : public IInputObserver{
+    class Scene : public IInputObserver {
     private:
         EngineContext& ctx;
         std::unique_ptr<TimerManager> timers;
@@ -53,8 +55,22 @@ namespace eng {
         void attachInput();
         void detachInput();
 
-        void addModel(std::unique_ptr<Model> model);
-        void addModel(const std::pair<float, float>& position, const std::pair<float, float>& size, const ViewConfig& config, Anchor anchor = Anchor::TopLeft);
+        // Scene.h
+        template<typename ConfigT>
+        auto addModel(const std::pair<float, float>& position, const std::pair<float, float>& size,
+                      const ConfigT& config, Anchor anchor = Anchor::TopLeft) {
+            auto model = ModelFactory::createModel(ctx, position, size, config, anchor);
+            Model* base = model.get();
+            models.push_back(std::move(model));
+
+            if constexpr (std::is_same_v<ConfigT, GridViewConfig>) {
+                return static_cast<GridModel*>(base);
+            } else if constexpr (std::is_same_v<ConfigT, ButtonViewConfig>) {
+                return static_cast<ButtonModel*>(base);
+            } else {
+                return base;   // TextViewConfig, plain ViewConfig, or anything not special-cased — Model* is still valid and safe
+            }
+        }
 
         //----------------------------------------------------------------------------------------------------------------------
         //Getters
