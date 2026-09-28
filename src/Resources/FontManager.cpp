@@ -24,17 +24,12 @@ namespace eng {
                 return load(font.m_path);
         }
 
-        // Should never be reached.
-        throw std::runtime_error(
-            "FontManager: invalid Font value"
-        );
+        throw std::runtime_error("FontManager: invalid Font value");
     }
 
     const sf::Font& FontManager::getDefaultFont() {
         const auto path =
-            m_engineAssetDirectory / "custom_font.ttf";
-
-        std::cout << "Font path: " << path.string() << '\n';
+            m_engineAssetDirectory / "default_font.otf";
 
         return load(path);
     }
@@ -49,28 +44,16 @@ namespace eng {
         sf::Font font;
 
         if (!font.openFromFile(path)) {
-            const auto defaultPath =
-                m_engineAssetDirectory / "custom_font.ttf";
-
-            if (path != defaultPath) {
-                std::cerr
-                    << "FontManager: failed to load '"
-                    << path.string()
-                    << "', using default font\n";
-
-                return getDefaultFont();
-            }
-
             throw std::runtime_error(
-                "FontManager: failed to load custom font: " +
-                defaultPath.string()
+                "FontManager: failed to load font: " +
+                std::filesystem::absolute(path).string()
             );
         }
 
-        auto [inserted, _] =
+        auto [it, inserted] =
             m_fonts.emplace(path, std::move(font));
 
-        return inserted->second;
+        return it->second;
     }
 
 }

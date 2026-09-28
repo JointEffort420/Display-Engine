@@ -49,6 +49,10 @@ void TestState::onEnter() {
 
     addModel({5, 5}, {10, 10}, textConfig);
 
+    eng::TextViewConfig textConfigTwo;
+
+    addModel({55, 5}, {10, 10}, textConfigTwo);
+
     //texture tests
     eng::SpriteViewConfig spriteConfig;
     spriteConfig.texture = eng::Texture::fromFile("../examples/Sandbox/assets/rook.png");
