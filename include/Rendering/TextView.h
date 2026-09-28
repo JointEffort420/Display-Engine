@@ -8,7 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
-#include "View.h"
+#include <Rendering/View.h>
+#include <Resources/FontManager.h>
 
 namespace eng {
     class TextView : public View {
@@ -30,7 +31,7 @@ namespace eng {
         //Constructors & Destructor
         //----------------------------------------------------------------------------------------------------------------------
         TextView() = delete;
-        TextView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera, const TextViewConfig& config);
+        TextView(ViewFactory::Key key, const EngineContext& ctx, const Model& model, Window& window, Camera& camera, const TextViewConfig& config);
 
         //----------------------------------------------------------------------------------------------------------------------
         //Setters

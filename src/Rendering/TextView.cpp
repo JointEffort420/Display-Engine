@@ -11,7 +11,7 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     // Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
-    TextView::TextView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
+    TextView::TextView(ViewFactory::Key key, const EngineContext& ctx, const Model& model, Window& window, Camera& camera,
                        const TextViewConfig& config)
         : View(key, model, window, camera),
         string(config.string),
@@ -20,17 +20,9 @@ namespace eng {
         edgeColor(config.edgeColor),
         edgeThickness(config.edgeThickness),
         fill(config.fill),
-        edge(config.edge)
+        edge(config.edge),
+        text(sf::Text(ctx.fontManager.resolve(config.font), config.string, config.characterSize))
     {
-        if (config.font) {
-            text.emplace(*config.font, string, requestedCharacterSize);
-            text->setFillColor(fillColor);
-            if (edge) {
-                text->setOutlineColor(edgeColor);
-                text->setOutlineThickness(edgeThickness);
-            }
-        }
-
         calibrate();
     }
 

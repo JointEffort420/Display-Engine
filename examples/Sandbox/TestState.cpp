@@ -4,6 +4,8 @@
 
 #include "TestState.h"
 
+#include <Resources/Font.h>
+
 void TestState::onEnter() {
     eng::PolygonViewConfig config1;
     eng::PolygonViewConfig config2;
@@ -39,4 +41,11 @@ void TestState::onEnter() {
     [this, position4, size, config4, anchor]{addModel(position4, size,config4, anchor);});
     after(5.0f,
     [this, position5, size, config5, anchor]{addModel(position5, size,config5, anchor);});
+
+
+    //text tests
+    eng::TextViewConfig textConfig;
+    textConfig.font = eng::Font::fromFile("assets/custom_font.ttf");
+
+    addModel({5, 5}, {10, 10}, textConfig);
 }

@@ -7,26 +7,20 @@ namespace eng {
         const std::pair<float, float>& worldSize,
         const std::pair<unsigned int, unsigned int>& windowSize
     ){
-        window = std::make_unique<Window>(
-            windowSize.first,
-            windowSize.second,
-            title
-        );
-
-        camera = std::make_unique<Camera>(
-            worldSize,
-            windowSize
-        );
-
+        window = std::make_unique<Window>(windowSize.first,windowSize.second, title);
+        camera = std::make_unique<Camera>(worldSize, windowSize);
         stateManager = std::make_unique<SceneManager>();
-
         clock = std::make_unique<Clock>();
+        fontManager = std::make_unique<FontManager>("../assets");
+        textureManager = std::make_unique<TextureManager>("../assets");
 
         ctx = std::make_unique<EngineContext>(
             *window,
             *camera,
             *stateManager,
-            *clock
+            *clock,
+            *fontManager,
+            *textureManager
         );
 
     }

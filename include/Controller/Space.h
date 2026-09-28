@@ -3,13 +3,15 @@
 
 #include <memory>
 
-#include "Window/Window.h"
-#include "Window/Camera.h"
-#include "Scenes/SceneManager.h"
-#include "Core/EngineContext.h"
-#include "Window/DesktopData.h"
+#include <Window/Window.h>
+#include <Window/Camera.h>
+#include <Scenes/SceneManager.h>
+#include <Core/EngineContext.h>
+#include <Window/DesktopData.h>
 #include <Scenes/Scene.h>
-#include "../Time/Clock.h"
+#include <Time/Clock.h>
+#include <Resources/FontManager.h>
+#include <Resources/TextureManager.h>
 
 namespace eng {
     class Space
@@ -19,6 +21,8 @@ namespace eng {
         std::unique_ptr<Camera> camera;
         std::unique_ptr<SceneManager> stateManager;
         std::unique_ptr<Clock> clock;
+        std::unique_ptr<FontManager> fontManager;
+        std::unique_ptr<TextureManager> textureManager;
         std::unique_ptr<EngineContext> ctx;
 
         bool running = false;

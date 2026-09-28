@@ -1,36 +1,82 @@
 //
-// Created by natha on 9/12/2026.
+// Created by natha on 28/9/2026.
 //
 
 #include "Resources/TextureManager.h"
 
+#include <iostream>
+#include <stdexcept>
+#include <utility>
+
 namespace eng {
-    const sf::Texture* TextureManager::getDefaultTexture() {
-        return get("../assets/default_texture.jpeg");
+
+    TextureManager::TextureManager(
+        std::filesystem::path engineAssetDirectory
+    )
+        : m_engineAssetDirectory(std::move(engineAssetDirectory)) {
     }
 
-    const sf::Texture* TextureManager::get(const std::string& path) {
-        auto& cache = getCache();
+    const sf::Texture* TextureManager::resolve(
+        const Texture& texture
+    ) {
+        switch (texture.m_type) {
+            case Texture::Type::None:
+                return nullptr;
 
-        if (auto it = cache.find(path); it != cache.end()) {
+            case Texture::Type::Default:
+                return getDefaultTexture();
+
+            case Texture::Type::File:
+                return load(texture.m_path);
+        }
+
+        // Should never be reached.
+        throw std::runtime_error(
+            "TextureManager: invalid Texture value"
+        );
+    }
+
+    const sf::Texture* TextureManager::getDefaultTexture() {
+        const auto path =
+            m_engineAssetDirectory / "default_texture.jpeg";
+
+        std::cout << "Texture path: " << path.string() << '\n';
+
+        return load(path);
+    }
+
+    const sf::Texture* TextureManager::load(
+        const std::filesystem::path& path
+    ) {
+        if (auto it = m_cache.find(path); it != m_cache.end()) {
             return &it->second;
         }
 
         sf::Texture texture;
+
         if (!texture.loadFromFile(path)) {
-            std::cerr << "TextureManager: failed to load '" << path
-                      << "', substituting the default texture\n";
-            if (path != "../assets/default_texture.jpeg") {
+            const auto defaultPath =
+                m_engineAssetDirectory / "default_texture.jpeg";
+
+            if (path != defaultPath) {
+                std::cerr
+                    << "TextureManager: failed to load '"
+                    << path.string()
+                    << "', using default texture\n";
+
                 return getDefaultTexture();
             }
+
+            throw std::runtime_error(
+                "TextureManager: failed to load default texture: " +
+                defaultPath.string()
+            );
         }
 
-        auto [inserted, _] = cache.emplace(path, std::move(texture));
+        auto [inserted, _] =
+            m_cache.emplace(path, std::move(texture));
+
         return &inserted->second;
     }
 
-    std::unordered_map<std::string, sf::Texture>& TextureManager::getCache() {
-        static std::unordered_map<std::string, sf::Texture> cache;
-        return cache;
-    }
 }

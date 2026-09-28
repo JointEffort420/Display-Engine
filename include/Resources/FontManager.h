@@ -10,18 +10,28 @@
 #include <unordered_map>
 #include <iostream>
 
-// Sole responsibility: own every sf::Font for the life of the program and
-// hand out stable, non-owning pointers to them. Nothing else may construct
-// or own an sf::Font that a View could end up pointing at.
+#include "Font.h"
 
 namespace eng {
     class FontManager {
-    private:
-        static std::unordered_map<std::string, sf::Font>& getCache();
-
     public:
-        static const sf::Font* getDefaultFont();
-        static const sf::Font* get(const std::string& path);
+        explicit FontManager(std::filesystem::path engineAssetDirectory);
+
+        const sf::Font& resolve(const Font& font);
+
+    private:
+        const sf::Font& load(
+            const std::filesystem::path& path
+        );
+
+        const sf::Font& getDefaultFont();
+
+        std::filesystem::path m_engineAssetDirectory;
+
+        std::unordered_map<
+            std::filesystem::path,
+            sf::Font
+        > m_fonts;
     };
 }
 

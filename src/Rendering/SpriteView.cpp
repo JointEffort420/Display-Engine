@@ -11,23 +11,20 @@ namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
     // Constructors & Destructor
     //----------------------------------------------------------------------------------------------------------------------
-    SpriteView::SpriteView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
+    SpriteView::SpriteView(ViewFactory::Key key, const EngineContext& ctx, const Model& model, Window& window, Camera& camera,
                            const SpriteViewConfig& config)
         : View(key, model, window, camera),
         origin(sf::Vector2f(config.origin.first, config.origin.second)),
         rotation(config.rotation),
-        textureRect(config.textureRect),
-        useTextureRect(config.useTextureRect),
         color(config.color)
     {
-        if (config.texture) {
-            sprite.emplace(*config.texture);
-            sprite->setOrigin(origin);
-            sprite->setRotation(sf::degrees(rotation));//Angle member seems inaccesible
-            sprite->setColor(color);
-            if (useTextureRect) sprite->setTextureRect(textureRect);
+        const sf::Texture* texture =
+            ctx.textureManager.resolve(config.texture);
 
+        if (texture != nullptr) {
+            sprite.emplace(*texture);
         }
+
         calibrate();
     }
 
@@ -37,11 +34,6 @@ namespace eng {
 
     void SpriteView::setTexture(const sf::Texture& texture, bool resetRect) {
         sprite->setTexture(texture, resetRect);
-        calibrate();
-    }
-
-    void SpriteView::setTextureRect(const sf::IntRect& rectangle) {
-        sprite->setTextureRect(rectangle);
         calibrate();
     }
 
@@ -73,7 +65,6 @@ namespace eng {
     float SpriteView::getRotation() const {return rotation;}
     sf::Vector2f SpriteView::getOrigin() const {return origin;}
     sf::Color SpriteView::getColor() const {return color;}
-    sf::IntRect SpriteView::getTextureRect() const {return textureRect;}
 
     //----------------------------------------------------------------------------------------------------------------------
     // Logic

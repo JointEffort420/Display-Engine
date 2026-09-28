@@ -7,7 +7,9 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "View.h"
+#include <Rendering/View.h>
+#include <Resources/TextureManager.h>
+
 namespace eng {
     class SpriteView : public View {
     private:
@@ -18,7 +20,6 @@ namespace eng {
         //Therefore we establish a shadow-state
         sf::Vector2f origin;
         float rotation ;
-        sf::IntRect textureRect;
         bool useTextureRect;
         sf::Color color;
 
@@ -27,7 +28,7 @@ namespace eng {
         //Constructors & Destructor
         //----------------------------------------------------------------------------------------------------------------------
         SpriteView() = delete;
-        SpriteView(ViewFactory::Key key, const Model& model, Window& window, Camera& camera,
+        SpriteView(ViewFactory::Key key, const EngineContext& ctx, const Model& model, Window& window, Camera& camera,
                    const SpriteViewConfig& config);
 
         //----------------------------------------------------------------------------------------------------------------------

@@ -41,7 +41,7 @@ namespace eng {
                 //------------------------------------------------------------------------------------------------
                 else if constexpr (std::is_same_v<T, TextViewConfig>) {
                     return std::make_unique<TextView>(
-                        Key(), model, ctx.window, ctx.camera, viewConfig
+                        Key(), ctx, model, ctx.window, ctx.camera, viewConfig
                     );
                 }
 
@@ -50,7 +50,7 @@ namespace eng {
                 //------------------------------------------------------------------------------------------------
                 else if constexpr (std::is_same_v<T, SpriteViewConfig>) {
                     return std::make_unique<SpriteView>(
-                        Key(), model, ctx.window, ctx.camera, viewConfig
+                        Key(), ctx, model, ctx.window, ctx.camera, viewConfig
                     );
                 }
 
@@ -86,10 +86,10 @@ namespace eng {
                         Key(), model, ctx.window, ctx.camera, viewConfig.polygonConfig
                     );
                     auto text = std::make_unique<TextView>(
-                        Key(), model, ctx.window, ctx.camera, viewConfig.textConfig
+                        Key(), ctx, model, ctx.window, ctx.camera, viewConfig.textConfig
                     );
                     auto icon = std::make_unique<SpriteView>(
-                        Key(), model, ctx.window, ctx.camera, viewConfig.spriteConfig
+                        Key(), ctx, model, ctx.window, ctx.camera, viewConfig.spriteConfig
                     );
 
                     return std::make_unique<ButtonView>(

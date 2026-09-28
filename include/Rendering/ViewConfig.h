@@ -15,9 +15,9 @@
 #include <variant>
 #include <vector>
 
-#include "Logic/CellBuilder.h"
-#include "Resources/FontManager.h"
-#include "Resources/TextureManager.h"
+#include <Logic/CellBuilder.h>
+#include <Resources/FontManager.h>
+#include <Resources/TextureManager.h>
 
 namespace eng {
     //----------------------------------------------------------------------------------------------------------------------
@@ -72,14 +72,33 @@ namespace eng {
 
     inline const GridViewConfig defaultGridViewConfig = {};
 
+
+    //----------------------------------------------------------------------------------------------------------------------
+    // Sprite
+    //----------------------------------------------------------------------------------------------------------------------
+
+    struct SpriteViewConfig {
+        std::pair<float, float> origin = {0.f, 0.f};
+        float rotation = 0.0f;
+
+        Texture texture = Texture::defaultTexture();
+
+        bool useTextureRect = false;
+
+        sf::Color color = sf::Color::White;
+    };
+    inline const SpriteViewConfig defaultSpriteConfig = {};
+    inline const SpriteViewConfig emptySpriteConfig = {
+        .texture = Texture::none()
+    };
+
     //----------------------------------------------------------------------------------------------------------------------
     // Text
     //----------------------------------------------------------------------------------------------------------------------
 
     struct TextViewConfig {
-        const sf::Font* font = FontManager::getDefaultFont();
-
         std::string string = "Lorem ipsum";
+        Font font = Font::defaultFont();
 
         unsigned int characterSize = 20;
 
@@ -93,24 +112,6 @@ namespace eng {
     };
 
     inline const TextViewConfig defaultTextConfig = {};
-
-    //----------------------------------------------------------------------------------------------------------------------
-    // Sprite
-    //----------------------------------------------------------------------------------------------------------------------
-
-    struct SpriteViewConfig {
-        std::pair<float, float> origin = {0.f, 0.f};
-        float rotation = 0.0f;
-
-        const sf::Texture* texture = TextureManager::getDefaultTexture();
-
-        sf::IntRect textureRect = sf::IntRect();
-
-        bool useTextureRect = false;
-
-        sf::Color color = sf::Color::White;
-    };
-    inline const SpriteViewConfig defaultSpriteConfig = {};
 
     //----------------------------------------------------------------------------------------------------------------------
     // Button
