@@ -11,8 +11,8 @@ namespace eng {
         camera = std::make_unique<Camera>(worldSize, windowSize);
         stateManager = std::make_unique<SceneManager>();
         clock = std::make_unique<Clock>();
-        fontManager = std::make_unique<FontManager>("../assets");
-        textureManager = std::make_unique<TextureManager>("../assets");
+        fontManager = std::make_unique<FontManager>(DISPLAYENGINE_ASSET_DIR);
+        textureManager = std::make_unique<TextureManager>(DISPLAYENGINE_ASSET_DIR);
 
         ctx = std::make_unique<EngineContext>(
             *window,

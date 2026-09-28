@@ -45,7 +45,12 @@ void TestState::onEnter() {
 
     //text tests
     eng::TextViewConfig textConfig;
-    textConfig.font = eng::Font::fromFile("assets/custom_font.ttf");
+    textConfig.font = eng::Font::fromFile("../examples/Sandbox/assets/custom_font.ttf");
 
     addModel({5, 5}, {10, 10}, textConfig);
+
+    //texture tests
+    eng::SpriteViewConfig spriteConfig;
+    spriteConfig.texture = eng::Texture::fromFile("../examples/Sandbox/assets/rook.png");
+    addModel({50, 50}, {30, 30}, spriteConfig);
 }
