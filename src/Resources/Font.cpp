@@ -10,8 +10,7 @@ namespace eng {
     }
 
     Font Font::fromFile(std::filesystem::path path) {
-        std::filesystem::path adjustedPath = "../" + path.string();
-        return Font(Type::File, std::move(adjustedPath));
+        return Font(Type::File, std::move(path));
     }
 
     Font::Font(Type type)
