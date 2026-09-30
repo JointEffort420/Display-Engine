@@ -9,13 +9,14 @@
 #include "Utils/Anchor.h"
 
 namespace eng {
+    struct PolygonViewConfig;
     class CellModel;
     class EngineContext;
 
     using CellBuilder = std::function<std::unique_ptr<CellModel>(
         EngineContext&, const std::pair<float, float>&, const std::pair<float, float>&, Anchor)>;
 
-    CellBuilder defaultCellBuilder();
+    CellBuilder defaultCellBuilder(PolygonViewConfig cellConfig);
 }
 
 #endif

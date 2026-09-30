@@ -8,22 +8,22 @@
 #include "Rendering/ViewConfig.h"
 
 void GridScene::onEnter() {
+    eng::PolygonViewConfig cellConfig;
+    cellConfig.relativePoints = {
+                    {0.5f, 0.0f},
+                    {0.0f, 0.3f},
+                    {1.0f, 0.3f},
+                    {0.2f, 1.0f},
+                    {0.8f, 1.0f}
+    };
+    cellConfig.edgeThickness = 5;
+
     eng::GridViewConfig gridConfig;
-    eng::TextViewConfig textConfig;
-    eng::ButtonViewConfig buttonConfig;
+    gridConfig.cellConfig = cellConfig;
+    gridConfig.cellBuilder = eng::defaultCellBuilder(cellConfig);
 
     grid = addModel({1, 1}, {98, 98}, gridConfig);
-    text = addModel({50, 1}, {30, 10}, textConfig);
-    button = addModel({50, 50}, {10, 10}, buttonConfig);
-
-    grid->toggleCell({1, 1});
-    grid->toggleCell({4, 1});
-    grid->toggleCell({5, 2});
-
-    eng::TextViewConfig fontChecker;
-    fontChecker.font = eng::Font::fromFile("assets/waffleFont.ttf");
-    fontChecker.string = "Wafflefont!";
-    addModel({60, 60}, {30, 10}, fontChecker);
+    every(0.1, [this] {grid->toggleCell(grid->getRandomCellCoordinate());});
 
 }
 bool GridScene::onLeftPressed(const std::pair<unsigned int, unsigned int> &windowCoordinates) {

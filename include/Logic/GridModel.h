@@ -20,6 +20,7 @@ namespace eng {
     private:
         EngineContext& ctx;
         CellBuilder cellBuilder;
+        PolygonViewConfig cellConfig;
 
         std::vector<std::unique_ptr<CellModel>> cells;       // nullptr slot == dead/empty cell
         std::pair<unsigned int, unsigned int> colRowCount;   // columns, rows
@@ -44,6 +45,7 @@ namespace eng {
                   const std::pair<float, float>& size,
                   const std::pair<unsigned int, unsigned int>& dimensions,
                   CellBuilder cellBuilder,
+                  PolygonViewConfig cellConfig,
                   Anchor anchor = Anchor::Center);
         ~GridModel() override;
 

@@ -42,7 +42,7 @@ namespace eng {
             //------------------------------------------------------------------------------------------------
             else if constexpr (std::is_same_v<T, GridViewConfig>) {
                 auto model = std::make_unique<GridModel>(
-                    Key(), ctx, position, size, viewConfig.gridDimensions, viewConfig.cellBuilder, anchor
+                    Key(), ctx, position, size, viewConfig.gridDimensions, viewConfig.cellBuilder, viewConfig.cellConfig, anchor
                 );
 
                 auto view = ViewFactory::createView(ctx, *model, config);

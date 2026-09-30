@@ -67,7 +67,8 @@ namespace eng {
         std::pair<unsigned int, unsigned int> gridDimensions = {10, 10};
         float lineWidth = 1.0f;
 
-        CellBuilder cellBuilder = defaultCellBuilder();
+        PolygonViewConfig cellConfig = defaultPolygonConfig;
+        CellBuilder cellBuilder = defaultCellBuilder(cellConfig);
     };
 
     inline const GridViewConfig defaultGridViewConfig = {};

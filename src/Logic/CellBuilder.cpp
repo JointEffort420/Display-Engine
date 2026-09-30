@@ -8,10 +8,10 @@
 #include "Rendering/View.h"
 
 namespace eng {
-    CellBuilder defaultCellBuilder() {
-        return [](EngineContext& ctx, const std::pair<float, float>& position,
+    CellBuilder defaultCellBuilder(PolygonViewConfig cellConfig) {
+        return [cellConfig](EngineContext& ctx, const std::pair<float, float>& position,
                   const std::pair<float, float>& size, Anchor anchor) {
-            return ModelFactory::createCell<CellModel>(ctx, position, size, defaultPolygonConfig, anchor);
+            return ModelFactory::createCell<CellModel>(ctx, position, size, cellConfig, anchor);
         };
     }
 }

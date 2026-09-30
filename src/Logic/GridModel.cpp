@@ -14,8 +14,9 @@ namespace eng {
         const std::pair<float, float>& size,
         const std::pair<unsigned int, unsigned int>& dimensions,
         CellBuilder cellBuilder,
+        PolygonViewConfig cellConfig,
         Anchor anchor)
-        : Model(key, position, size, anchor), ctx(ctx), cellBuilder(std::move(cellBuilder)), colRowCount(dimensions)
+        : Model(key, position, size, anchor), ctx(ctx), cellBuilder(std::move(cellBuilder)), cellConfig(cellConfig), colRowCount(dimensions)
     {
         resizeCells();
     }

@@ -119,6 +119,8 @@ add_executable(DisplayEngineGameOfLife
         examples/GameOfLife/MenuScene.h
         examples/GameOfLife/GridScene.cpp
         examples/GameOfLife/GridScene.h
+        examples/GameOfLife/ColorCell.cpp
+        examples/GameOfLife/ColorCell.h
 )
 
 target_link_libraries(DisplayEngineGameOfLife
