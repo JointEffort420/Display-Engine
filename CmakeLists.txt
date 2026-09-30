@@ -57,6 +57,10 @@ add_library(DisplayEngine
         src/Rendering/CellView.cpp
 
         #   Resources
+        src/Resources/Font.cpp
+        src/Resources/FontManager.cpp
+        src/Resources/Texture.cpp
+        src/Resources/TextureManager.cpp
 
         #   Scenes
         src/Scenes/SceneFactory.cpp
@@ -72,10 +76,6 @@ add_library(DisplayEngine
         src/Time/Clock.cpp
         src/Time/Timer.cpp
         src/Time/TimerManager.cpp
-        src/Resources/Font.cpp
-        src/Resources/FontManager.cpp
-        src/Resources/Texture.cpp
-        src/Resources/TextureManager.cpp
 )
 
 target_include_directories(DisplayEngine
