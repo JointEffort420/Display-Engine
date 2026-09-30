@@ -19,6 +19,12 @@ void GridScene::onEnter() {
     grid->toggleCell({1, 1});
     grid->toggleCell({4, 1});
     grid->toggleCell({5, 2});
+
+    eng::TextViewConfig fontChecker;
+    fontChecker.font = eng::Font::fromFile("assets/waffleFont.ttf");
+    fontChecker.string = "Wafflefont!";
+    addModel({60, 60}, {30, 10}, fontChecker);
+
 }
 bool GridScene::onLeftPressed(const std::pair<unsigned int, unsigned int> &windowCoordinates) {
     return grid->onClick(getCtx().camera.windowToWorldPosition(windowCoordinates));

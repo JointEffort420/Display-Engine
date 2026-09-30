@@ -12,7 +12,8 @@ namespace eng {
     }
 
     Texture Texture::fromFile(std::filesystem::path path) {
-        return Texture(Type::File, std::move(path));
+        std::filesystem::path adjustedPath = "../" + path.string();
+        return Texture(Type::File, std::move(adjustedPath));
     }
 
     Texture Texture::none() {
